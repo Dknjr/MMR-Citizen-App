@@ -92,92 +92,99 @@ export default function SubmitRequest() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, { backgroundColor: currentColors.background }]}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.header}>
-            <Text style={[styles.title, { color: currentColors.text }]}>SUBMIT REQUEST</Text>
-          </View>
-          <Text style={[styles.description, { color: currentColors.text }]}>
-            Lorem ipsum dolor sit amet consectetur. Diam in eget eget massa tortor.
-          </Text>
+        <ScrollView 
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={true}
+        indicatorStyle={isDarkMode ? 'white' : 'black'}
+        scrollIndicatorInsets={{ right: 0 }}  // Ajout d'un espacement de 10 à droite
+        >
+          <View style={styles.contentwidth}>
+            <View style={styles.header}>
+              <Text style={[styles.title, { color: currentColors.text }]}>SUBMIT REQUEST</Text>
+            </View>
+            <Text style={[styles.description, { color: currentColors.text }]}>
+              Lorem ipsum dolor sit amet consectetur. Diam in eget eget massa tortor.
+            </Text>
 
-          <Text style={[styles.titles, { color: currentColors.text }]}>First Name</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter your First Name"
-            placeholderTextColor={currentColors.icon}
-            value={firstName}
-            onChangeText={setFirstName}
-          />
+            <Text style={[styles.titles, { color: currentColors.text }]}>First Name</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
+              placeholder="Enter your First Name"
+              placeholderTextColor={currentColors.icon}
+              value={firstName}
+              onChangeText={setFirstName}
+            />
 
-          <Text style={[styles.titles, { color: currentColors.text }]}>Last Name</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter your Last Name"
-            placeholderTextColor={currentColors.icon}
-            value={lastName}
-            onChangeText={setLastName}
-          />
+            <Text style={[styles.titles, { color: currentColors.text }]}>Last Name</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
+              placeholder="Enter your Last Name"
+              placeholderTextColor={currentColors.icon}
+              value={lastName}
+              onChangeText={setLastName}
+            />
 
-          <Text style={[styles.titles, { color: currentColors.text }]}>Email Id</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter your Email Id"
-            placeholderTextColor={currentColors.icon}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
+            <Text style={[styles.titles, { color: currentColors.text }]}>Email Id</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
+              placeholder="Enter your Email Id"
+              placeholderTextColor={currentColors.icon}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+            />
 
-          <Text style={[styles.titles, { color: currentColors.text }]}>Mobile Number</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter your Mobile Number"
-            placeholderTextColor={currentColors.icon}
-            value={mobile}
-            onChangeText={setMobile}
-            keyboardType="phone-pad"
-          />
+            <Text style={[styles.titles, { color: currentColors.text }]}>Mobile Number</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
+              placeholder="Enter your Mobile Number"
+              placeholderTextColor={currentColors.icon}
+              value={mobile}
+              onChangeText={setMobile}
+              keyboardType="phone-pad"
+            />
 
-          <Text style={[styles.titles, { color: currentColors.text }]}>Subject</Text>
-          <TextInput
-            style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter the Subject"
-            placeholderTextColor={currentColors.icon}
-            value={subject}
-            onChangeText={setSubject}
-          />
+            <Text style={[styles.titles, { color: currentColors.text }]}>Subject</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
+              placeholder="Enter the Subject"
+              placeholderTextColor={currentColors.icon}
+              value={subject}
+              onChangeText={setSubject}
+            />
 
-          <Text style={[styles.titles, { color: currentColors.text }]}>Message</Text>
-          <TextInput
-            style={[styles.input, styles.textArea, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter your Message"
-            placeholderTextColor={currentColors.icon}
-            value={message}
-            onChangeText={setMessage}
-            multiline={true}
-            numberOfLines={4}
-          />
+            <Text style={[styles.titles, { color: currentColors.text }]}>Message</Text>
+            <TextInput
+              style={[styles.input, styles.textArea, { backgroundColor: currentColors.base, color: currentColors.text }]}
+              placeholder="Enter your Message"
+              placeholderTextColor={currentColors.icon}
+              value={message}
+              onChangeText={setMessage}
+              multiline={true}
+              numberOfLines={4}
+            />
 
-          <Text style={styles.warning}>Please verify your entered details before submitting</Text>
+            <Text style={styles.warning}>Please verify your entered details before submitting</Text>
 
-          <Text style={[styles.label, { color: currentColors.text }]}>Attachments</Text>
-          <TouchableOpacity style={[styles.attachment, { backgroundColor: currentColors.base }]} onPress={handleAttachmentPress}>
-            <Text style={[styles.attachmentText, { color: currentColors.icon }]}>+ Add your files here</Text>
-          </TouchableOpacity>
-
-          <View style={styles.imageContainer}>
-            {selectedImages.map((image, index) => (
-              <Image key={index} source={{ uri: image.uri }} style={styles.thumbnail} />
-            ))}
-          </View>
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.text }]} onPress={handleReset}>
-              <Text style={[styles.buttonText, { color: currentColors.background }]}>Reset</Text>
+            <Text style={[styles.label, { color: currentColors.text }]}>Attachments (Photos)</Text>
+            <TouchableOpacity style={[styles.attachment, { backgroundColor: currentColors.base }]} onPress={handleAttachmentPress}>
+              <Text style={[styles.attachmentText, { color: currentColors.icon }]}>+ Add your files here</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleNext}>
-              <Text style={[styles.buttonText, { color: currentColors.background }]}>Next</Text>
-            </TouchableOpacity>
+
+            <View style={styles.imageContainer}>
+              {selectedImages.map((image, index) => (
+                <Image key={index} source={{ uri: image.uri }} style={styles.thumbnail} />
+              ))}
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.text }]} onPress={handleReset}>
+                <Text style={[styles.buttonText, { color: currentColors.background }]}>Reset</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleNext}>
+                <Text style={[styles.buttonText, { color: currentColors.background }]}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -188,7 +195,11 @@ export default function SubmitRequest() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
+  },
+  contentwidth: {
+    marginLeft:20, 
+    marginRight: 20,
   },
   scrollContainer: {
     paddingBottom: 20,

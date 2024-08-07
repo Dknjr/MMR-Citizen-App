@@ -28,8 +28,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 30,
-        borderWidth: 1,
-        borderColor: '#ccc',
         marginTop: 20,
         width: '100%',
     },
@@ -38,6 +36,7 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         flex: 1,
+        height: 25,
     }
 });
 

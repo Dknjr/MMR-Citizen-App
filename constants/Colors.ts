@@ -8,6 +8,7 @@ export type ColorScheme = 'light' | 'dark';
 export interface ColorsType {
   light: {
     base: string;
+    coverbase: string;
     text: string;
     background: string;
     tint: string;
@@ -17,6 +18,7 @@ export interface ColorsType {
   };
   dark: {
     base: string;
+    coverbase: string;
     text: string;
     background: string;
     tint: string;
@@ -32,6 +34,7 @@ const tintColorDark = '#fff';
 export const Colors: ColorsType = {
   light: {
     base: '#E3E3E3',
+    coverbase: '#E3E3E3',
     text: '#3F003B',
     background: '#fff',
     tint: tintColorLight,
@@ -41,6 +44,7 @@ export const Colors: ColorsType = {
   },
   dark: {
     base: '#E3E3E3',
+    coverbase: '#151718',
     text: '#ECEDEE',
     background: '#151718',
     tint: tintColorDark,

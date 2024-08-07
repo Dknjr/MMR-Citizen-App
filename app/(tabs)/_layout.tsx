@@ -4,7 +4,6 @@ import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import { StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
 
@@ -16,7 +15,8 @@ export default function TabLayout() {
       screenOptions={{
         tabBarStyle : {position: 'absolute'},
         tabBarBackground: () => ( 
-          <BlurView tint="light" intensity={50} style={StyleSheet.absoluteFill}/>
+        
+          <BlurView tint="light" intensity={80} style={StyleSheet.absoluteFill}/>
         ),
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,

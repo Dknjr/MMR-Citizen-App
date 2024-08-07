@@ -15,6 +15,7 @@ export default function AddScreen() {
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
   const handleReportPress = () => {
+    router.push('/Report');
   };
   
   const handleRequestPress = () => {
@@ -27,7 +28,7 @@ export default function AddScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor:currentColors.background}]}>
         <View style={styles.notificationContainer}>
           <Text style={[styles.text, { color: currentColors.text }]}>Report or Request ?</Text>
           <View style={[styles.globalnotif, { backgroundColor: currentColors.text }]}>
@@ -76,7 +77,7 @@ export default function AddScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 30,
+    padding: 20,
   },
   notificationContainer: {
     flexDirection: 'row',

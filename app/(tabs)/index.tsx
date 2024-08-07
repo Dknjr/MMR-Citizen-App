@@ -6,10 +6,7 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Icons from '@expo/vector-icons/Ionicons';
 import SearchBar from '@/components/searchbar';
-import NavigationBar from '@/components/navigationbar';
 import AllNews from '@/components/allnews'; // Assurez-vous que le chemin d'importation soit correct
-import PoliticsNews from '@/components/politicsnews';
-import SportsNews from '@/components/sportsnews';
 
 
 export default function HomeScreen() {
@@ -22,45 +19,33 @@ export default function HomeScreen() {
     console.log('Notification pressed');
   };
 
-  const [selectedTab, setSelectedTab] = useState('All');
 
-  const renderContent = () => {
-    switch (selectedTab) {
-      case 'All':
-        return <AllNews />;
-      case 'Politics':
-        return <PoliticsNews />;
-      case 'Sports':
-        return <SportsNews />;
-      default:
-        return <AllNews />;
-    }
-  };
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.welcome}>
-          <Text style={[styles.text, { color: currentColors.tint, fontWeight: '600' }]}>
-            Bonjour{'\n'}Good morning
-          </Text>
-          <View style={[styles.globalnotif, { backgroundColor: currentColors.text }]}>
-            <Icons style={[styles.notif, { color: currentColors.background }]} name='notifications-outline' />
+      <SafeAreaView style={[styles.container, {backgroundColor:currentColors.background}]}>
+        <View style={styles.welcomeheader} >
+          <View style={styles.welcome}>
+            <Text style={[styles.text, { color: currentColors.tint, fontWeight: '600' }]}>
+              Bonjour{'\n'}Good morning
+            </Text>
+            <View style={[styles.globalnotif, { backgroundColor: currentColors.text }]}>
+              <Icons style={[styles.notif, { color: currentColors.background }]} name='notifications-outline' />
+            </View>
           </View>
+
+          <View style={styles.intro}>
+            <Text style={[styles.text, { color: currentColors.text, fontSize: 18, fontWeight: 'bold' }]}>
+              Stay Informed,{'\n'}
+              Stay Empowered,{'\n'}
+              Your Daily News Hub.
+            </Text>
+          </View>
+
+          <SearchBar currentColors={currentColors} />
         </View>
-
-        <View style={styles.intro}>
-          <Text style={[styles.text, { color: currentColors.text, fontSize: 20, fontWeight: 'bold' }]}>
-            Stay Informed,{'\n'}
-            Stay Empowered,{'\n'}
-            Your Daily News Hub.
-          </Text>
-        </View>
-
-        <SearchBar currentColors={currentColors} />
-        <NavigationBar currentColors={currentColors} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-
-        {renderContent()}
+        <AllNews/>
+        
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -70,7 +55,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 30,  
+    padding: 0,
   },
   text: {
     color: Colors.light.tint,
@@ -83,12 +68,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     padding: 10 ,
   },
+  welcomeheader: {
+    padding: 20,
+  },
   welcome:{
     flexDirection: 'row', 
     justifyContent: 'space-between',
   },
   intro:{
-    marginTop: 10,
+    marginTop: 5,
   },
   introText:{
     color: Colors.light.text,
