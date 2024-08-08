@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import{Colors} from '@/constants/Colors'
+import {Colors} from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome6,} from '@expo/vector-icons';
 import Icons from '@expo/vector-icons/Ionicons'
+import { useRouter } from 'expo-router';
+
+
 
 export default function UserProfile() {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
@@ -28,8 +32,12 @@ export default function UserProfile() {
     }
   };
 
+  const handleProfilPress = () => {
+    router.push('');
+  };
+
   return (
-    <View style={[styles.container, {backgroundColor: currentColors.base}]}>
+    <View style={[styles.container, {backgroundColor: currentColors.coverbase}]}>
       <View style={styles.coverImageWrapper}>
         {coverImage ? (
           <Image source={{ uri: coverImage }} style={styles.coverImage} />
@@ -41,20 +49,21 @@ export default function UserProfile() {
       <View style={styles.profileContainer}>
         <View style={styles.profilPreview}>
           <View style={[styles.profileImageWrapper,{ backgroundColor:currentColors.base}]}>
-          {profileImage ? (
-            <Image source={{ uri: profileImage }} style={styles.profileImage} />
-          ) : (
-            <View style={styles.profileImagePlaceholder}>
-              <Icons name="person-circle" size={50} color="#fff" />
-            </View>
-          )}
+            {profileImage ? (
+              <Image source={{ uri: profileImage }} style={styles.profileImage} />
+            ) : (
+              <View style={styles.profileImagePlaceholder}>
+                <Icons name="person-circle" size={50} color="#fff" />
+              </View>
+            )}
+          </View>
 
+          <TouchableOpacity  onPress={() => pickImage(setProfileImage)} style={styles.modify}>
+            <Icons name="pencil" size={24} 
+            style={styles.editIcon} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity  onPress={() => pickImage(setProfileImage)} style={styles.modify}>
-          <Icons name="pencil" size={24} 
-           style={styles.editIcon} />
-        </TouchableOpacity>
-        </View>
+
         <View style={styles.backicons}>
           <TouchableOpacity >
             <View >
@@ -67,7 +76,6 @@ export default function UserProfile() {
             </View>
           </TouchableOpacity>
         </View>
-        
 
         <Text style={styles.profileName}>Laura AGBEDOUVI</Text>
         <Text style={styles.profileDescription}>
@@ -77,14 +85,14 @@ export default function UserProfile() {
 
       <View style={styles.menu}>
         <View style={styles.secu}>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]}>
           <View style= {styles.menuItemLeft}>
             <Icons name="person-circle" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Profil</Text>
           </View>
             <Icons name="chevron-forward" size={30} color={currentColors.icon} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]}>
           <View style= {styles.menuItemLeft}>
             <Icons name="key" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Confidentiality</Text>
@@ -93,21 +101,21 @@ export default function UserProfile() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]}>
           <View style= {styles.menuItemLeft}>
             <Icons name="notifications" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Notifications</Text>
           </View>
           <Icons name="chevron-forward" size={30} color={currentColors.icon} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]}>
           <View style= {styles.menuItemLeft}>
             <Icons name="information-circle" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Help</Text>
           </View>
           <Icons name="chevron-forward" size={30} color={currentColors.icon} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]}>
           <View style= {styles.menuItemLeft}>
             <FontAwesome6 name="heart-crack" size={30} color={currentColors.icon}/>
             <Text style={styles.menuItemText}>Log out</Text>
@@ -227,8 +235,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
-    borderRadius: 15,
+    borderRadius: 20,
     marginBottom: 10,
     elevation: 2,
   },
@@ -237,6 +244,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   menuItemText: {
+    color: Colors.light.text,
     marginLeft: 20,
     fontSize: 16,
   },

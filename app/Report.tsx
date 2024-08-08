@@ -135,7 +135,7 @@ export default function Report() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor:currentColors.background}]}>
         <View style={styles.headerStyle}>
           <View style={styles.header}>
             <Text style={[styles.title, { color: currentColors.tint }]}>
@@ -210,11 +210,14 @@ export default function Report() {
                 )}
               </View>
 
+            </View>
+
+          </View>
               <View style={styles.section}>
-                <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Message</Text>
+                <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Descriptions</Text>
                 <TextInput
                   style={[styles.input, styles.textArea, { backgroundColor: currentColors.base, color: currentColors.text }]}
-                  placeholder="Enter your Message"
+                  placeholder="More descriptions"
                   placeholderTextColor={currentColors.icon}
                   value={description}
                   onChangeText={setDescription}
@@ -222,18 +225,15 @@ export default function Report() {
                   numberOfLines={4}
                 />
               </View>
-            </View>
-
-          </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.text }]} onPress={handleReset}>
+                  <Text style={[styles.buttonText, { color: currentColors.background }]}>Reset</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleNext}>
+                  <Text style={[styles.buttonText, { color: currentColors.background }]}>Next</Text>
+                </TouchableOpacity>
+              </View>
         </ScrollView>
-        <View style={[styles.buttonContainer, { backgroundColor: currentColors.background }]}>
-          <TouchableOpacity style={styles.button} onPress={handleReset}>
-            <Text style={styles.buttonText}>Reset</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -342,21 +342,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonContainer: {
-    padding: 20,
-    marginBottom: 15,
+    marginTop: 25,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   button: {
-    backgroundColor: '#4caf50',
-    padding: 10,
-    borderRadius: 20,
-    alignItems: 'center',
     flex: 1,
     marginHorizontal: 5,
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });

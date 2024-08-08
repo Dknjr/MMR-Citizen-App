@@ -7,6 +7,8 @@ export type ColorScheme = 'light' | 'dark';
 
 export interface ColorsType {
   light: {
+    menubase: string;
+    menuicon: string;
     base: string;
     coverbase: string;
     text: string;
@@ -17,6 +19,8 @@ export interface ColorsType {
     tabIconSelected: string;
   };
   dark: {
+    menubase: string;
+    menuicon: string;
     base: string;
     coverbase: string;
     text: string;
@@ -33,6 +37,8 @@ const tintColorDark = '#fff';
 
 export const Colors: ColorsType = {
   light: {
+    menubase: tintColorDark ,
+    menuicon: '#687076',
     base: '#E3E3E3',
     coverbase: '#E3E3E3',
     text: '#3F003B',
@@ -43,6 +49,8 @@ export const Colors: ColorsType = {
     tabIconSelected: tintColorLight,
   },
   dark: {
+    menubase: '#E3E3E3',
+    menuicon: tintColorDark,
     base: '#E3E3E3',
     coverbase: '#151718',
     text: '#ECEDEE',

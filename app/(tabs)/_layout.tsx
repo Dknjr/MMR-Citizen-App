@@ -6,6 +6,8 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
+import ProfileStack from '@/app/ProfilStack';
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -41,7 +43,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="profil"
-        options={{
+        options={{ 
           title: 'Profil',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person-circle' : 'person-circle-outline'} color={color} />
