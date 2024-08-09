@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome6,} from '@expo/vector-icons';
 import Icons from '@expo/vector-icons/Ionicons'
 import { useRouter } from 'expo-router';
+import notifications from '../ProfileSreen/Notification';
 
 
 
@@ -33,7 +34,19 @@ export default function UserProfile() {
   };
 
   const handleProfilPress = () => {
-    router.push('');
+    router.push('/ProfileSreen/UserProfile');
+  };
+  const handleConfidentialityPress = () => {
+    router.push('/ProfileSreen/Confidentiality');
+  };
+  const handleNotificationsPress = () => {
+    router.push('/ProfileSreen/Notification');
+  };
+  const handleHelpPress = () => {
+    router.push('/ProfileSreen/Help');
+  };
+  const handleLogoutPress = () => {
+    router.push('/ProfileSreen/Logout');
   };
 
   return (
@@ -85,14 +98,14 @@ export default function UserProfile() {
 
       <View style={styles.menu}>
         <View style={styles.secu}>
-          <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]}>
+          <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]} onPress={handleProfilPress}>
           <View style= {styles.menuItemLeft}>
             <Icons name="person-circle" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Profil</Text>
           </View>
             <Icons name="chevron-forward" size={30} color={currentColors.icon} />
           </TouchableOpacity>
-          <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]}>
+          <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]} onPress={handleConfidentialityPress}>
           <View style= {styles.menuItemLeft}>
             <Icons name="key" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Confidentiality</Text>
@@ -101,21 +114,21 @@ export default function UserProfile() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]}>
+        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]} onPress={handleNotificationsPress}>
           <View style= {styles.menuItemLeft}>
             <Icons name="notifications" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Notifications</Text>
           </View>
           <Icons name="chevron-forward" size={30} color={currentColors.icon} />
         </TouchableOpacity>
-        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]}>
+        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase } ]} onPress={handleHelpPress}>
           <View style= {styles.menuItemLeft}>
             <Icons name="information-circle" size={30} color={currentColors.icon} />
             <Text style={styles.menuItemText}>Help</Text>
           </View>
           <Icons name="chevron-forward" size={30} color={currentColors.icon} />
         </TouchableOpacity>
-        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]}>
+        <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]} onPress={handleLogoutPress}>
           <View style= {styles.menuItemLeft}>
             <FontAwesome6 name="heart-crack" size={30} color={currentColors.icon}/>
             <Text style={styles.menuItemText}>Log out</Text>

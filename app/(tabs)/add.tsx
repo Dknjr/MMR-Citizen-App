@@ -7,7 +7,6 @@ import Icons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 
-
 export default function AddScreen() {
   const router = useRouter();  
   const colorScheme = useColorScheme();
@@ -22,51 +21,43 @@ export default function AddScreen() {
     router.push('/Request');
   };
 
-  const handleSwipeLeft = () => {
-    router.push('/Request');
-  };
-
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={[styles.container, {backgroundColor:currentColors.background}]}>
+      <SafeAreaView style={[styles.container, {backgroundColor: currentColors.background}]}>
         <View style={styles.notificationContainer}>
-          <Text style={[styles.text, { color: currentColors.text }]}>Report or Request ?</Text>
+          <Text style={[styles.text, { color: currentColors.text }]}>Report or Request?</Text>
           <View style={[styles.globalnotif, { backgroundColor: currentColors.text }]}>
             <Icons style={[styles.notif, { color: currentColors.background }]} name='notifications-outline' />
           </View>
         </View>
 
         <View style={styles.cardcontainer}>
-          <View>
-            <View style={styles.card}>
-              <Image source={require('@/assets/images/Ordures.jpg')} style={styles.image} />
-              <LinearGradient colors={['#D30000', '#120011']} style={styles.gradient1}>
-                <Text style={styles.cardText1}>
-                  Help us keep our city safe and clean! Report any incidents today and
-                  make a difference in our community.
-                </Text>
-              </LinearGradient>
-              <TouchableOpacity onPress={handleReportPress} style={styles.button1}>
-                <Text style={styles.cardTitle}>Report</Text>
-              </TouchableOpacity>
-              <Image source={require('@/assets/images/Megaphone.png')} style={styles.png1} />
-            </View>
+          <View style={styles.card}>
+            <Image source={require('@/assets/images/Ordures.jpg')} style={styles.image} />
+            <LinearGradient colors={['#D30000', '#120011']} style={styles.gradient1}>
+              <Text style={styles.cardText1}>
+                Help us keep our city safe and clean! Report any incidents today and
+                make a difference in our community.
+              </Text>
+            </LinearGradient>
+            <TouchableOpacity onPress={handleReportPress} style={styles.button1}>
+              <Text style={styles.cardTitle}>Report</Text>
+            </TouchableOpacity>
+            <Image source={require('@/assets/images/Megaphone.png')} style={styles.png1} />
           </View>
 
-          <View>
-            <View style={styles.card}>
-              <Image source={require('@/assets/images/Ouvrier.jpg')} style={styles.image} />
-              <LinearGradient colors={['#310042', '#FC5C7D']} style={styles.gradient2}>
-                <Text style={styles.cardText2}>
-                  Your voice matters! Submit your citizen requests today and help
-                  improve our community.
-                </Text>
-              </LinearGradient>
-              <TouchableOpacity onPress={handleRequestPress} style={styles.button2}>
-                <Text style={styles.cardTitle}>Request</Text>
-              </TouchableOpacity>
-              <Image source={require('@/assets/images/equality.png')} style={styles.png2} />
-            </View>
+          <View style={styles.card}>
+            <Image source={require('@/assets/images/Ouvrier.jpg')} style={styles.image} />
+            <LinearGradient colors={['#310042', '#FC5C7D']} style={styles.gradient2}>
+              <Text style={styles.cardText2}>
+                Your voice matters! Submit your citizen requests today and help
+                improve our community.
+              </Text>
+            </LinearGradient>
+            <TouchableOpacity onPress={handleRequestPress} style={styles.button2}>
+              <Text style={styles.cardTitle}>Request</Text>
+            </TouchableOpacity>
+            <Image source={require('@/assets/images/equality.png')} style={styles.png2} />
           </View>
         </View>
       </SafeAreaView>

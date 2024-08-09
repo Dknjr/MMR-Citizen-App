@@ -100,7 +100,7 @@ export default function SubmitRequest() {
         >
           <View style={styles.contentwidth}>
             <View style={styles.header}>
-              <Text style={[styles.title, { color: currentColors.text }]}>SUBMIT REQUEST</Text>
+              <Text style={[styles.title, { color: Colors.light.tint }]}>SUBMIT REQUEST</Text>
             </View>
             <Text style={[styles.description, { color: currentColors.text }]}>
               Lorem ipsum dolor sit amet consectetur. Diam in eget eget massa tortor.

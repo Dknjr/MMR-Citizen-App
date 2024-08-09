@@ -5,10 +5,10 @@ import i18n from 'i18n-js';
 import en from '@/translation/en.json';
 import fr from '@/translation/fr.json';
 
-i18n.defaultLocale = 'en';
-i18n.locale = Localization.locale;
-i18n.fallbacks = true;
-i18n.translations = {
+// Configuration de i18n
+(i18n as any).locale = Localization.locale || 'en';  // Remplace `defaultLocale`
+(i18n as any).fallbacks = true;                      // Pas de changement ici, reste une propriété existante
+(i18n as any).translations = {                       // Utilisez les traductions disponibles
   en,
   fr,
 };

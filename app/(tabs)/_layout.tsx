@@ -1,13 +1,10 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-
+import { StyleSheet } from 'react-native'; // Correction ici
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { StyleSheet } from 'react-native';
 import { BlurView } from 'expo-blur';
-import ProfileStack from '@/app/ProfilStack';
-
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -15,10 +12,9 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarStyle : {position: 'absolute'},
-        tabBarBackground: () => ( 
-        
-          <BlurView tint="light" intensity={80} style={StyleSheet.absoluteFill}/>
+        tabBarStyle: { position: 'absolute' },
+        tabBarBackground: () => (
+          <BlurView tint="light" intensity={80} style={StyleSheet.absoluteFillObject} /> // Correction ici
         ),
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
@@ -42,9 +38,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profil"
-        options={{ 
-          title: 'Profil',
+        name="profile"
+        options={{
+          title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person-circle' : 'person-circle-outline'} color={color} />
           ),

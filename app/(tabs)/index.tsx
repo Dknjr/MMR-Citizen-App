@@ -1,5 +1,5 @@
 // screens/HomeScreen.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
@@ -26,7 +26,7 @@ export default function HomeScreen() {
       <SafeAreaView style={[styles.container, {backgroundColor:currentColors.background}]}>
         <View style={styles.welcomeheader} >
           <View style={styles.welcome}>
-            <Text style={[styles.text, { color: currentColors.tint, fontWeight: '600' }]}>
+            <Text style={[styles.text, { color: Colors.light.tint, fontWeight: '600' }]}>
               Bonjour{'\n'}Good morning
             </Text>
             <View style={[styles.globalnotif, { backgroundColor: currentColors.text }]}>

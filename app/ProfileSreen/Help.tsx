@@ -1,9 +1,10 @@
+import { useColorScheme } from '@/hooks/useColorScheme';
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import * as ImagePicker from 'expo-image-picker';
+import RootLayout from '@/app/_layout';
 
 export default function Help() {
 
@@ -15,7 +16,12 @@ export default function Help() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, { backgroundColor: currentColors.background }]}>
-
+        <View>
+          <Text style={{ color: currentColors.text }}>Help</Text>
+        </View>
+        <View>
+          <RootLayout/>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );

@@ -138,7 +138,7 @@ export default function Report() {
       <SafeAreaView style={[styles.container, {backgroundColor:currentColors.background}]}>
         <View style={styles.headerStyle}>
           <View style={styles.header}>
-            <Text style={[styles.title, { color: currentColors.tint }]}>
+            <Text style={[styles.title, { color: Colors.light.tint }]}>
               Today
             </Text>
             <Text style={[styles.date, { color: currentColors.text }]}>
@@ -158,7 +158,7 @@ export default function Report() {
           <View style={styles.content}>
             <View style={styles.formWrapper}>
 
-              <Text style={[styles.sectionTitle, { color: currentColors.tint }]}>Reports</Text>
+              <Text style={styles.sectionTitle}>Reports</Text>
               <View style={styles.section}>
                 <ScrollView style={styles.scrollview}>
                   {renderContent()}
@@ -166,7 +166,7 @@ export default function Report() {
               </View>
 
               <View style={styles.section}>
-                <Text style={[styles.sectionTitle, { color: currentColors.tint }]}>Images</Text>
+                <Text style={styles.sectionTitle}>Images</Text>
                 <TouchableOpacity style={[styles.imagePicker, { backgroundColor: currentColors.base }]} onPress={handleAttachmentPress}>
                   <Text style={[styles.imagePickerText, { color: currentColors.icon }]}>+ Add your files here</Text>
                 </TouchableOpacity>
@@ -179,7 +179,7 @@ export default function Report() {
               </View>
 
               <View style={styles.section}>
-                <Text style={[styles.sectionTitle, { color: currentColors.tint }]}>Location</Text>
+                <Text style={styles.sectionTitle}>Location</Text>
                 <TouchableOpacity style={styles.locationButton} onPress={requestLocation}>
                   <Icons style={styles.locationIcon} name="location" size={24} color={currentColors.text} />
                   <TextInput
@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
     maxHeight: 200,
   },
   sectionTitle: {
+    color: Colors.light.tint,
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 15,

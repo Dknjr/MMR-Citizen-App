@@ -1,11 +1,11 @@
+import { useColorScheme } from '@/hooks/useColorScheme';
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function UserProfil() {
+export default function Logout() {
 
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
@@ -15,7 +15,9 @@ export default function UserProfil() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, { backgroundColor: currentColors.background }]}>
-
+        <View>
+          <Text style={{ color: currentColors.text }}>Logout</Text>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -28,5 +30,3 @@ const styles = StyleSheet.create({
   }  
 
 });
-
-UserProfil()

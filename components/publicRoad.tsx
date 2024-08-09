@@ -26,7 +26,8 @@ export default function PublicRoad () {
                         style={[styles.radioButtonText, { color: currentColors.text }]}>Sidewalk Repair
                         </Text>
                         <RadioButton.Android value="Sidewalk Repair" 
-                        />
+                        color={currentColors.tint}
+                        uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
