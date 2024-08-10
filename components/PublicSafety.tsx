@@ -7,18 +7,22 @@ import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-nativ
 
 type ReportType = '' | 'Reporting graffiti or vandalism' | 'Safety issues in public spaces' | 'Requests for increased police presence in certain areas';
 
-export default function Public () {
+export default function Public ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
-
+    
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
+    const handleReportSelection = (value: string) => {
+        setSelectedReport(value as ReportType);
+        setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
+    };
 
     return (
         <View>
             <RadioButton.Group
-                onValueChange={(value: string) => setSelectedReport(value as ReportType)}
+                onValueChange={handleReportSelection}
                 value={selectedReport}>
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>

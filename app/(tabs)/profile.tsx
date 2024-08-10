@@ -6,7 +6,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome6,} from '@expo/vector-icons';
 import Icons from '@expo/vector-icons/Ionicons'
 import { useRouter } from 'expo-router';
-import notifications from '../ProfileSreen/Notification';
 
 
 
@@ -131,7 +130,7 @@ export default function UserProfile() {
         <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]} onPress={handleLogoutPress}>
           <View style= {styles.menuItemLeft}>
             <FontAwesome6 name="heart-crack" size={30} color={currentColors.icon}/>
-            <Text style={styles.menuItemText}>Log out</Text>
+            <Text style={styles.menuItemText}>Logout</Text>
           </View>
           <Icons name="chevron-forward" size={30} color={currentColors.icon} />
         </TouchableOpacity>
