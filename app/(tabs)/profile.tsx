@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import {Colors} from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Image, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome6,} from '@expo/vector-icons';
 import Icons from '@expo/vector-icons/Ionicons'
 import { useRouter } from 'expo-router';
 
-
-
 export default function UserProfile() {
+  const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
-
+  
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
-
+  
   const pickImage = async (setImage: React.Dispatch<React.SetStateAction<string | null>>) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -26,18 +28,41 @@ export default function UserProfile() {
       aspect: [1, 1],
       quality: 1,
     });
-
+    
     if (!result.canceled && result.assets) {
       setImage(result.assets[0].uri);
     }
   };
 
+  const handlePasswordSubmit = () => {
+    if (password === 'yourpassword') { // ***Je dois remplacer par la logique de validation du mot de passe***
+      setPasswordModalVisible(false);
+      setPassword('');
+      router.push('/ProfileSreen/Confidentiality');
+
+    } else {
+      setErrorMessage('Incorrect password');
+    }
+  };
+
+  const handlePasswordChange = (text: string) => { // Ajout du type pour text
+    setPassword(text);
+    setErrorMessage(''); // Réinitialiser le message d'erreur à chaque changement de mot de passe
+  };
+  
+  const handleCancel = () => {
+    setPassword(''); // Réinitialiser le champ de saisie du mot de passe
+    setPasswordModalVisible(false); // Fermer l'overlay
+  };
+
+  const handleConfidentialityPress = () => {
+    setPasswordModalVisible(true);
+  };
+
   const handleProfilPress = () => {
     router.push('/ProfileSreen/UserProfile');
   };
-  const handleConfidentialityPress = () => {
-    router.push('/ProfileSreen/Confidentiality');
-  };
+  
   const handleNotificationsPress = () => {
     router.push('/ProfileSreen/Notification');
   };
@@ -100,7 +125,7 @@ export default function UserProfile() {
           <TouchableOpacity style={[ styles.menuItem, { backgroundColor: currentColors.menubase }]} onPress={handleProfilPress}>
           <View style= {styles.menuItemLeft}>
             <Icons name="person-circle" size={30} color={currentColors.icon} />
-            <Text style={styles.menuItemText}>Profil</Text>
+            <Text style={styles.menuItemText}>Profile</Text>
           </View>
             <Icons name="chevron-forward" size={30} color={currentColors.icon} />
           </TouchableOpacity>
@@ -134,6 +159,51 @@ export default function UserProfile() {
           </View>
           <Icons name="chevron-forward" size={30} color={currentColors.icon} />
         </TouchableOpacity>
+
+
+
+        <Modal
+        transparent={true}
+        visible={isPasswordModalVisible}
+        animationType="slide"
+        onRequestClose={handleCancel}
+      >
+        <BlurView intensity={35} style={styles.modalOverlay}>
+          <View style={[styles.modalContainer, { backgroundColor: currentColors.background }]}>
+            <View style={styles.modalHeader}>
+              <TouchableOpacity onPress={handleCancel}>
+                <Text style={[styles.cancelButton, { color: currentColors.text }]}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handlePasswordSubmit}
+                disabled={!password} // Désactiver si le mot de passe est vide
+                style={password ? styles.okButtonEnabled : styles.okButtonDisabled} // Styles corrigés
+              >
+                <Text style={[styles.okButtonText, { color: currentColors.tint }]}>OK</Text>
+              </TouchableOpacity>
+            </View>
+
+            {errorMessage ? (
+              <Text style={[styles.errorText, { color: currentColors.tint }]}>
+                {errorMessage}
+              </Text>
+            ) : null}
+
+            <Text style={[styles.modalText, { color: currentColors.text }]}>Enter your password</Text>
+            <TextInput
+              style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
+              placeholder="Enter your password"
+              placeholderTextColor={currentColors.icon}
+              secureTextEntry={true}
+              value={password}
+              onChangeText={handlePasswordChange}
+            />
+          </View>
+        </BlurView>
+      </Modal>
+
+
+
       </View>
     </View>
   );
@@ -259,5 +329,52 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
     marginLeft: 20,
     fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    
+  },
+  modalContainer: {
+    width: '80%',
+    padding: 20,
+    borderRadius: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  cancelButton: {
+    fontSize: 16,
+  },
+  okButtonEnabled: {
+    opacity: 1,
+  },
+  okButtonDisabled: {
+    opacity: 0.5,
+  },
+  okButtonText: {
+    fontWeight: 'bold',
+  },
+  errorText: {
+    fontSize: 14,
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  input: {
+    height: 40,
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    textAlign: 'center',
   },
 });

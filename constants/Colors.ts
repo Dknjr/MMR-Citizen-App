@@ -39,7 +39,7 @@ export const Colors: ColorsType = {
   light: {
     menubase: tintColorDark ,
     menuicon: '#687076',
-    base: '#E3E3E3',
+    base: '#F3F3F3',
     coverbase: '#E3E3E3',
     text: '#3F003B',
     background: '#fff',
@@ -51,10 +51,10 @@ export const Colors: ColorsType = {
   dark: {
     menubase: '#E3E3E3',
     menuicon: tintColorDark,
-    base: '#E3E3E3',
+    base: '#CCD0CF',
     coverbase: '#151718',
-    text: '#ECEDEE',
-    background: '#151718',
+    text: '#9BABAB',
+    background: '#06141B',
     tint: tintColorDark,
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',

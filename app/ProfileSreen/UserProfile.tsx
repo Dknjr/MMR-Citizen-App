@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Stack } from 'expo-router';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import Icons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors'; // Assurez-vous que ce chemin est correct
 //import { getUserProfile } from '@/services/userService'; // Assurez-vous que ce service récupère les données de la base de données
 
@@ -35,10 +34,10 @@ export default function UserProfile() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, {backgroundColor: currentColors.background}]}>
-      <Stack.Screen
+        <Stack.Screen
           options={{
             headerTitle: 'Profile',
-            
+              
             headerRight: () => (
               <Text style={styles.modifyButton} onPress={handleModifyPress}>
                 Modify
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   cell: {
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#F3F3F3',
     borderRadius: 30,
     padding: 15,
     marginVertical: 5,

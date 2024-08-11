@@ -6,6 +6,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import Icons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+import { ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import CategoriesNavBar from '@/components/CategoriesNavBar';
 import PublicRoad from '@/components/publicRoad';
@@ -22,6 +23,7 @@ export default function Report() {
   const [level, setLevel] = useState(0);
   const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>(null);
   const [description, setDescription] = useState<string>('');
+  const [loading, setLoading] = useState(false);
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [selectedTab, setSelectedTab] = useState('Street lights');
@@ -34,28 +36,36 @@ export default function Report() {
   const section2Ref = useRef<View>(null);
   const section3Ref = useRef<View>(null);
 
-  const handleLayoutChange = () => {
-    if (section2Ref.current && section3Ref.current) {
-      section2Ref.current.measureLayout(
-        section3Ref.current,
-        (x, y, width, height) => {
-          setLine2Height(y - 40); // Mise à jour de la hauteur en fonction de la distance
-        },
-        () => {}
-      );
-    }
-  };
+  // Déclenche le calcul après que la page entière soit chargée
+  /*useEffect(() => {
+    const handleLayoutChange = () => {
+      if (section2Ref.current && section3Ref.current) {
+        section2Ref.current.measureLayout(
+          section3Ref.current,
+          (x, y, width, height) => {
+            setLine2Height(y - 40); // Mise à jour de la hauteur en fonction de la distance
+          },
+          () =>{
+            (error: any) => console.error('Erreur lors de la mesure de la disposition:', error)
+          }
+        );
+      }
+    };
 
+    handleLayoutChange();
+  }, [section2Ref, section3Ref]);*/
 
+  // Active le niveau 2 lorsque des images sont ajoutées (uniquement si le niveau 1 est activé)
   useEffect(() => {
-    if (selectedImages.length > 0) {
-      setLevel(2); // Active le niveau 2 lorsque des images sont ajoutées
+    if (selectedImages.length > 0 && level >= 1) {
+      setLevel(2);
     }
   }, [selectedImages]);
 
+  // Active le niveau 3 lorsque la localisation est définie (uniquement si le niveau 2 est activé)
   useEffect(() => {
-    if (isLocationSet) {
-      setLevel(3); // Active le niveau 3 lorsque la localisation est définie
+    if (isLocationSet && level >= 2) {
+      setLevel(3);
     }
   }, [isLocationSet]);
 
@@ -66,11 +76,18 @@ export default function Report() {
   };
 
   const requestLocation = async () => {
+    if (level < 2) {
+      Alert.alert('Please complete the previous steps first.');
+      return;
+    }
+
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Permission to access location was denied');
       return;
     }
+    
+    setLoading(true);
 
     let location = await Location.getCurrentPositionAsync({});
     setLocation({
@@ -78,9 +95,15 @@ export default function Report() {
       longitude: location.coords.longitude,
     });
     setIsLocationSet(true);
+    setLoading(false);
   };
 
   const pickImage = async () => {
+    if (level < 1) {
+      Alert.alert('Please complete the previous steps first.');
+      return;
+    }
+
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       alert('Permission to access camera roll is required!');
@@ -99,6 +122,11 @@ export default function Report() {
   };
 
   const takePhoto = async () => {
+    if (level < 1) {
+      Alert.alert('Please complete the previous steps first.');
+      return;
+    }
+
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       alert('Permission to access camera is required!');
@@ -142,12 +170,15 @@ export default function Report() {
     setSelectedImages([]);
     setIsLocationSet(false);
     setLevel(0); // Réinitialise la TimeLine
+    setSelectedTab('Street lights'); // Réinitialise la catégorie
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = selectedImages.filter((_, i) => i !== index);
     setSelectedImages(updatedImages);
-    setLevel(1);
+    if (updatedImages.length === 0) {
+      setLevel(1); // Réinitialise le niveau 2 si toutes les images sont supprimées
+    }
   };
 
   const handleNext = () => {
@@ -155,21 +186,22 @@ export default function Report() {
     console.log('Form Submitted');
   };
 
-
   const renderContent = () => {
     switch (selectedTab) {
-      case 'Street lights': return <StreetLights setLevel={setLevel}  />;
-      case 'Public roads': return <PublicRoad setLevel={setLevel}  />;
-      case 'Environment': return <Environment setLevel={setLevel}  />;
-      case 'Parks and gardens': return <Parks setLevel={setLevel}  />;
-      case 'Traffic and parking': return <Traffic setLevel={setLevel}  />;
-      case 'Urban development': return <Urban setLevel={setLevel}  />;
+      case 'Street lights': return <StreetLights setLevel={setLevel} />;
+      case 'Public roads': return <PublicRoad setLevel={setLevel} />;
+      case 'Environment': return <Environment setLevel={setLevel} />;
+      case 'Parks and gardens': return <Parks setLevel={setLevel} />;
+      case 'Traffic and parking': return <Traffic setLevel={setLevel} />;
+      case 'Urban development': return <Urban setLevel={setLevel} />;
       case 'City services': return <City setLevel={setLevel} />;
-      case 'Public safety': return <Public setLevel={setLevel}  />;
-      case 'Social services': return <Social setLevel={setLevel}  />;
-      default: return <StreetLights setLevel={setLevel}  />;
+      case 'Public safety': return <Public setLevel={setLevel} />;
+      case 'Social services': return <Social setLevel={setLevel} />;
+      default: return <StreetLights setLevel={setLevel} />;
     }
   };
+
+
 
   return (
     <SafeAreaProvider>
@@ -197,7 +229,7 @@ export default function Report() {
                 <View style={[styles.circle, level >= 2 && styles.completedCircle]}>
                   <Text style={styles.circleText}>2</Text>
                 </View>
-                <View style={[styles.line2, level >= 2 && styles.completedLine]} />
+                <View style={[styles.line2, {height: line2Height}, level >= 2 && styles.completedLine]} />
                 <View style={[styles.circle, level >= 3 && styles.completedCircle]}>
                   <Text style={styles.circleText}>3</Text>
                 </View>
@@ -206,13 +238,13 @@ export default function Report() {
 
             <View style={styles.formWrapper}>
               <Text style={styles.sectionTitle}>Reports</Text>
-              <View ref={section2Ref} style={styles.section}>
+              <View style={styles.section}>
                 <ScrollView style={styles.scrollview}>
                   {renderContent()}
                 </ScrollView>
               </View>
 
-              <View ref={section3Ref} style={styles.section}>
+              <View ref={section2Ref} style={styles.section}>
                 <Text style={styles.sectionTitle}>Images</Text>
                 <TouchableOpacity style={[styles.imagePicker, { backgroundColor: currentColors.base }]} onPress={handleAttachmentPress}>
                   <Text style={[styles.imagePickerText, { color: currentColors.icon }]}>+ Add your files here</Text>
@@ -230,12 +262,18 @@ export default function Report() {
                 </View>
               </View>
 
-              <View style={styles.section}>
+              <View ref={section3Ref} style={styles.section}>
                 <Text style={styles.sectionTitle}>Location</Text>
                 <View style={styles.locationlayout}>
+
                   <TouchableOpacity style={styles.locationButton} onPress={requestLocation}>
-                    <Icons style={styles.locationIcon} name="location" size={24} color='#fff' />
+                    {!loading ? (
+                      <Icons style={styles.locationIcon} name="location" size={24} color='#fff' />
+                    ):(
+                      <ActivityIndicator style={styles.activityindicator} color="#fff" />
+                    )}
                   </TouchableOpacity>
+
                   <TextInput
                     style={[styles.input, { color: currentColors.text }]}
                     placeholder="Object location"
@@ -351,7 +389,7 @@ const styles = StyleSheet.create({
   },
   line2: {
     width: 4,
-    height: 150,
+    //height: 150,
     backgroundColor: '#e0e0e0',
     marginBottom: 10,
   },
@@ -433,7 +471,10 @@ const styles = StyleSheet.create({
   locationIcon: {
     padding: 5,
     margin: 5, 
-    
+  },
+  activityindicator: {
+    padding: 5,
+    margin: 5,
   },
   input: {
     flex: 1,
