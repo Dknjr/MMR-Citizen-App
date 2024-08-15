@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Requests for social assistance or emergency housing' | 'Reporting situations of distress or abuse' | 'Requests for information on available social services';
+type ReportType = '' | "Demandes d'assistance sociale ou de logement d'urgence" | 'Signalement de situations de détresse ou de maltraitance' | "Demandes d'informations sur les services sociaux disponibles";
 
 export default function Social ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -16,6 +16,7 @@ export default function Social ({ setLevel }: { setLevel: (level: number) => voi
 
     const handleReportSelection = (value: string) => {
         setSelectedReport(value as ReportType);
+        useState<ReportType>('');
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
@@ -27,25 +28,25 @@ export default function Social ({ setLevel }: { setLevel: (level: number) => voi
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Requests for socialassistance{'\n'}or emergency housing
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Demandes d'assistance{'\n'}sociale ou de logement{'\n'}d'urgence
                         </Text>
-                        <RadioButton.Android value="Requests for social assistance or emergency housing" 
+                        <RadioButton.Android value="Demandes d'assistance sociale ou de logement d'urgence" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Reporting situations{'\n'}of distress or abuse
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Signalement de situations{'\n'}de détresse ou de{'\n'}maltraitance
                         </Text>
-                        <RadioButton.Android value="Reporting situations of distress or abuse" 
+                        <RadioButton.Android value="Signalement de situations de détresse ou de maltraitance" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Requests for information{'\n'}on available social services
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Demandes d'informations{'\n'}sur les services sociaux{'\n'}disponibles
                         </Text>
-                        <RadioButton.Android value="Requests for information on available social services" 
+                        <RadioButton.Android value="Demandes d'informations sur les services sociaux disponibles" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>

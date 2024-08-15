@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Image } from 'react-native';
+import { Stack } from 'expo-router';
+import { View, Text, TextInput,  TouchableOpacity, StyleSheet, ScrollView, Alert, Image } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import * as ImagePicker from 'expo-image-picker';
+import RequestModal from './Modals/RequestModal';
 
 export default function SubmitRequest() {
+  const [isModalVisible, setModalVisible] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -28,15 +31,10 @@ export default function SubmitRequest() {
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
-  const handleNext = () => {
-    // Logic to handle form submission
-    console.log('Form Submitted');
-  };
-
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert('Permission to access camera roll is required!');
+      alert("Cette Aplication souhaite accéder à l'appareil photo !");
       return;
     }
 
@@ -54,7 +52,7 @@ export default function SubmitRequest() {
   const takePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      alert('Permission to access camera is required!');
+      alert("Cette Aplication souhaite accéder à l'appareil photo !");
       return;
     }
 
@@ -69,19 +67,19 @@ export default function SubmitRequest() {
 
   const handleAttachmentPress = () => {
     Alert.alert(
-      'Upload Photo',
-      'Choose an option',
+      'Ajouter des Photos',
+      'Choisissez une option',
       [
         {
-          text: 'Choose from library',
+          text: 'Choisir dans la bibliothèque',
           onPress: pickImage,
         },
         {
-          text: 'Take a photo',
+          text: 'Prendre une photo',
           onPress: takePhoto,
         },
         {
-          text: 'Cancel',
+          text: 'Annuler',
           style: 'cancel',
         },
       ],
@@ -89,8 +87,21 @@ export default function SubmitRequest() {
     );
   };
 
+  const handleSubmit = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <SafeAreaProvider>
+      <Stack.Screen
+          options={{
+            headerTitle: 'Demande'
+          }}
+        />
       <SafeAreaView style={[styles.container, { backgroundColor: currentColors.background }]}>
         <ScrollView 
         contentContainerStyle={styles.scrollContainer}
@@ -100,54 +111,54 @@ export default function SubmitRequest() {
         >
           <View style={styles.contentwidth}>
             <View style={styles.header}>
-              <Text style={[styles.title, { color: Colors.light.tint }]}>SUBMIT REQUEST</Text>
+              <Text style={[styles.title, { color: Colors.light.tint }]}>SOUMETTRE UNE DEMANDE</Text>
             </View>
             <Text style={[styles.description, { color: currentColors.text }]}>
               Lorem ipsum dolor sit amet consectetur. Diam in eget eget massa tortor.
             </Text>
 
-            <Text style={[styles.titles, { color: currentColors.text }]}>First Name</Text>
+            <Text style={[styles.titles, { color: currentColors.text }]}>Prénom</Text>
             <TextInput
               style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-              placeholder="Enter your First Name"
+              placeholder="Entrez votre prénom"
               placeholderTextColor={currentColors.icon}
               value={firstName}
               onChangeText={setFirstName}
             />
 
-            <Text style={[styles.titles, { color: currentColors.text }]}>Last Name</Text>
+            <Text style={[styles.titles, { color: currentColors.text }]}>Nom de famille</Text>
             <TextInput
               style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-              placeholder="Enter your Last Name"
+              placeholder="Entrez votrez nom de famille"
               placeholderTextColor={currentColors.icon}
               value={lastName}
               onChangeText={setLastName}
             />
 
-            <Text style={[styles.titles, { color: currentColors.text }]}>Email Id</Text>
+            <Text style={[styles.titles, { color: currentColors.text }]}>Email</Text>
             <TextInput
               style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-              placeholder="Enter your Email Id"
+              placeholder="Entrez votre Email"
               placeholderTextColor={currentColors.icon}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
             />
 
-            <Text style={[styles.titles, { color: currentColors.text }]}>Mobile Number</Text>
+            <Text style={[styles.titles, { color: currentColors.text }]}>Numéro de Téléphone</Text>
             <TextInput
               style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-              placeholder="Enter your Mobile Number"
+              placeholder="Entrez votre numéro de téléphone"
               placeholderTextColor={currentColors.icon}
               value={mobile}
               onChangeText={setMobile}
               keyboardType="phone-pad"
             />
 
-            <Text style={[styles.titles, { color: currentColors.text }]}>Subject</Text>
+            <Text style={[styles.titles, { color: currentColors.text }]}>Objet</Text>
             <TextInput
               style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-              placeholder="Enter the Subject"
+              placeholder="Entrez l'objet de la demande"
               placeholderTextColor={currentColors.icon}
               value={subject}
               onChangeText={setSubject}
@@ -156,7 +167,7 @@ export default function SubmitRequest() {
             <Text style={[styles.titles, { color: currentColors.text }]}>Message</Text>
             <TextInput
               style={[styles.input, styles.textArea, { backgroundColor: currentColors.base, color: currentColors.text }]}
-              placeholder="Enter your Message"
+              placeholder="Entrez votre Message"
               placeholderTextColor={currentColors.icon}
               value={message}
               onChangeText={setMessage}
@@ -164,11 +175,11 @@ export default function SubmitRequest() {
               numberOfLines={4}
             />
 
-            <Text style={styles.warning}>Please verify your entered details before submitting</Text>
+            <Text style={styles.warning}>Veuillez vérifier les informations entrées avant de soumettre.</Text>
 
-            <Text style={[styles.label, { color: currentColors.text }]}>Attachments (Photos)</Text>
+            <Text style={[styles.label, { color: currentColors.text }]}>Images</Text>
             <TouchableOpacity style={[styles.attachment, { backgroundColor: currentColors.base }]} onPress={handleAttachmentPress}>
-              <Text style={[styles.attachmentText, { color: currentColors.icon }]}>+ Add your files here</Text>
+              <Text style={[styles.attachmentText, { color: currentColors.icon }]}>+ Ajoutez vos fichiers ici</Text>
             </TouchableOpacity>
 
             <View style={styles.imageContainer}>
@@ -179,10 +190,11 @@ export default function SubmitRequest() {
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.text }]} onPress={handleReset}>
-                <Text style={[styles.buttonText, { color: currentColors.background }]}>Reset</Text>
+                <Text style={[styles.buttonText, { color: currentColors.background }]}>Réinitialiser</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleNext}>
-                <Text style={[styles.buttonText, { color: currentColors.background }]}>Next</Text>
+              <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleSubmit}>
+                <Text style={[styles.buttonText, { color: currentColors.background }]}>Envoyer</Text>
+                <RequestModal visible={isModalVisible} onClose={handleCloseModal} />
               </TouchableOpacity>
             </View>
           </View>

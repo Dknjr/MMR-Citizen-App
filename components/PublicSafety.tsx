@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Reporting graffiti or vandalism' | 'Safety issues in public spaces' | 'Requests for increased police presence in certain areas';
+type ReportType = '' | 'Signalement de graffitis ou de vandalismes' | 'Problèmes de sécurité dans les espaces publics' | 'Demandes de présence policière accrue dans certaines zones';
 
 export default function Public ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -27,25 +27,25 @@ export default function Public ({ setLevel }: { setLevel: (level: number) => voi
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Reporting graffiti or vandalism
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Signalement de graffitis ou de vandalismes
                         </Text>
-                        <RadioButton.Android value="Reporting graffiti or vandalism" 
+                        <RadioButton.Android value="Signalement de graffitis ou de vandalismes" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Safety issues in public spaces
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Problèmes de sécurité dans{'\n'}les espaces publics
                         </Text>
-                        <RadioButton.Android value="Safety issues in public spaces" 
+                        <RadioButton.Android value="Problèmes de sécurité dans les espaces publics" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Requests for increased{'\n'}police presence in certain{'\n'}areas
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Demandes de présence{'\n'}policière accrue dans{'\n'}certaines zones
                         </Text>
-                        <RadioButton.Android value="Requests for increased police presence in certain areas" 
+                        <RadioButton.Android value="Demandes de présence policière accrue dans certaines zones" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>

@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, LayoutChangeEvent } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Stack } from 'expo-router';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Icons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import { ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import CategoriesNavBar from '@/components/CategoriesNavBar';
 import PublicRoad from '@/components/publicRoad';
@@ -18,51 +18,28 @@ import Urban from '@/components/UrbanDevelopment';
 import City from '@/components/CityServices';
 import Public from '@/components/PublicSafety';
 import Social from '@/components/SocialServices';
+import ReportModal from '@/app/Modals/reportModal';
 
 export default function Report() {
+  const [isModalVisible, setModalVisible] = useState(false);
   const [level, setLevel] = useState(0);
   const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>(null);
   const [description, setDescription] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
-  const [selectedTab, setSelectedTab] = useState('Street lights');
-  const [line2Height, setLine2Height] = useState(100);
+  const [selectedTab, setSelectedTab] = useState('Éclairage public');
 
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
-  const section2Ref = useRef<View>(null);
-  const section3Ref = useRef<View>(null);
-
-  // Déclenche le calcul après que la page entière soit chargée
-  /*useEffect(() => {
-    const handleLayoutChange = () => {
-      if (section2Ref.current && section3Ref.current) {
-        section2Ref.current.measureLayout(
-          section3Ref.current,
-          (x, y, width, height) => {
-            setLine2Height(y - 40); // Mise à jour de la hauteur en fonction de la distance
-          },
-          () =>{
-            (error: any) => console.error('Erreur lors de la mesure de la disposition:', error)
-          }
-        );
-      }
-    };
-
-    handleLayoutChange();
-  }, [section2Ref, section3Ref]);*/
-
-  // Active le niveau 2 lorsque des images sont ajoutées (uniquement si le niveau 1 est activé)
   useEffect(() => {
     if (selectedImages.length > 0 && level >= 1) {
       setLevel(2);
     }
   }, [selectedImages]);
 
-  // Active le niveau 3 lorsque la localisation est définie (uniquement si le niveau 2 est activé)
   useEffect(() => {
     if (isLocationSet && level >= 2) {
       setLevel(3);
@@ -77,13 +54,13 @@ export default function Report() {
 
   const requestLocation = async () => {
     if (level < 2) {
-      Alert.alert('Please complete the previous steps first.');
+      Alert.alert('Veuillez complèter les étapes précédentes.');
       return;
     }
 
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission to access location was denied');
+      Alert.alert('Accès refusé');
       return;
     }
     
@@ -100,13 +77,18 @@ export default function Report() {
 
   const pickImage = async () => {
     if (level < 1) {
-      Alert.alert('Please complete the previous steps first.');
+      Alert.alert('Veuillez complèter les étapes précédentes.');
+      return;
+    }
+
+    if (selectedImages.length >= 3) {
+      Alert.alert('Vous ne pouvez ajouter que 3 images.');
       return;
     }
 
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert('Permission to access camera roll is required!');
+      alert("Cette Aplication souhaite accéder à l'appareil photo !");
       return;
     }
 
@@ -117,19 +99,30 @@ export default function Report() {
     });
 
     if (!result.canceled) {
-      setSelectedImages([...selectedImages, ...result.assets]);
+      const newImages = [...selectedImages, ...result.assets];
+      if (newImages.length > 3) {
+        Alert.alert('Vous ne pouvez ajouter que 3 images.');
+        setSelectedImages(newImages.slice(0, 3)); // Limite à 3 images
+      } else {
+        setSelectedImages(newImages);
+      }
     }
   };
 
   const takePhoto = async () => {
     if (level < 1) {
-      Alert.alert('Please complete the previous steps first.');
+      Alert.alert('Veuillez complèter les étapes précédentes.');
+      return;
+    }
+
+    if (selectedImages.length >= 3) {
+      Alert.alert('Vous ne pouvez ajouter que 3 images.');
       return;
     }
 
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      alert('Permission to access camera is required!');
+      alert("Cette Aplication souhaite accéder à l'appareil photo !");
       return;
     }
 
@@ -138,25 +131,31 @@ export default function Report() {
     });
 
     if (!result.canceled) {
-      setSelectedImages([...selectedImages, result.assets[0]]);
+      const newImages = [...selectedImages, result.assets[0]];
+      if (newImages.length > 3) {
+        Alert.alert('Vous ne pouvez ajouter que 3 images.');
+        setSelectedImages(newImages.slice(0, 3)); // Limite à 3 images
+      } else {
+        setSelectedImages(newImages);
+      }
     }
   };
 
   const handleAttachmentPress = () => {
     Alert.alert(
-      'Upload Photo',
-      'Choose an option',
+      'Ajouter des Photos',
+      'Choisissez une option',
       [
         {
-          text: 'Choose from library',
+          text: 'Choisir dans la bibliothèque',
           onPress: pickImage,
         },
         {
-          text: 'Take a photo',
+          text: 'Prendre une photo',
           onPress: takePhoto,
         },
         {
-          text: 'Cancel',
+          text: 'Annuler',
           style: 'cancel',
         },
       ],
@@ -169,49 +168,56 @@ export default function Report() {
     setDescription('');
     setSelectedImages([]);
     setIsLocationSet(false);
-    setLevel(0); // Réinitialise la TimeLine
-    setSelectedTab('Street lights'); // Réinitialise la catégorie
+    setLevel(0);
+    setSelectedTab('Éclairage public');
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = selectedImages.filter((_, i) => i !== index);
     setSelectedImages(updatedImages);
     if (updatedImages.length === 0) {
-      setLevel(1); // Réinitialise le niveau 2 si toutes les images sont supprimées
+      setLevel(1);
     }
   };
-
-  const handleNext = () => {
-    // Logic to handle form submission
-    console.log('Form Submitted');
-  };
+  
 
   const renderContent = () => {
     switch (selectedTab) {
-      case 'Street lights': return <StreetLights setLevel={setLevel} />;
-      case 'Public roads': return <PublicRoad setLevel={setLevel} />;
-      case 'Environment': return <Environment setLevel={setLevel} />;
-      case 'Parks and gardens': return <Parks setLevel={setLevel} />;
-      case 'Traffic and parking': return <Traffic setLevel={setLevel} />;
-      case 'Urban development': return <Urban setLevel={setLevel} />;
-      case 'City services': return <City setLevel={setLevel} />;
-      case 'Public safety': return <Public setLevel={setLevel} />;
-      case 'Social services': return <Social setLevel={setLevel} />;
+      case 'Éclairage public': return <StreetLights setLevel={setLevel} />;
+      case 'Voirie': return <PublicRoad setLevel={setLevel} />;
+      case 'Environnement': return <Environment setLevel={setLevel} />;
+      case 'Espaces verts': return <Parks setLevel={setLevel} />;
+      case 'Transports et stationnement': return <Traffic setLevel={setLevel} />;
+      case 'Logement et urbanisme': return <Urban setLevel={setLevel} />;
+      case 'Services municipaux': return <City setLevel={setLevel} />;
+      case 'Sécurité publique': return <Public setLevel={setLevel} />;
+      case 'Services sociaux': return <Social setLevel={setLevel} />;
       default: return <StreetLights setLevel={setLevel} />;
     }
   };
 
+  const handleSubmit = () => {
+    setModalVisible(true);
+  };
 
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
   return (
     <SafeAreaProvider>
+      <Stack.Screen
+          options={{
+            headerTitle: 'Signalement'
+          }}
+        />
       <SafeAreaView style={[styles.container, { backgroundColor: currentColors.background }]}>
         <View style={styles.headerStyle}>
           <View style={styles.header}>
-            <Text style={[styles.title, { color: Colors.light.tint }]}>Today</Text>
+            <Text style={[styles.title, { color: Colors.light.tint }]}>Aujourd'hui</Text>
             <Text style={[styles.date, { color: currentColors.text }]}>{getCurrentDate()}</Text>
           </View>
-          <Text style={[styles.category, { color: currentColors.text }]}>Categories</Text>
+          <Text style={[styles.category, { color: currentColors.text }]}>Catégories</Text>
           <CategoriesNavBar currentColors={currentColors} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         </View>
 
@@ -229,7 +235,7 @@ export default function Report() {
                 <View style={[styles.circle, level >= 2 && styles.completedCircle]}>
                   <Text style={styles.circleText}>2</Text>
                 </View>
-                <View style={[styles.line2, {height: line2Height}, level >= 2 && styles.completedLine]} />
+                <View style={[styles.line2, level >= 2 && styles.completedLine]} />
                 <View style={[styles.circle, level >= 3 && styles.completedCircle]}>
                   <Text style={styles.circleText}>3</Text>
                 </View>
@@ -237,17 +243,17 @@ export default function Report() {
             </View>
 
             <View style={styles.formWrapper}>
-              <Text style={styles.sectionTitle}>Reports</Text>
+              <Text style={styles.sectionTitle}>Signalement</Text>
               <View style={styles.section}>
                 <ScrollView style={styles.scrollview}>
                   {renderContent()}
                 </ScrollView>
               </View>
 
-              <View ref={section2Ref} style={styles.section}>
+              <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Images</Text>
                 <TouchableOpacity style={[styles.imagePicker, { backgroundColor: currentColors.base }]} onPress={handleAttachmentPress}>
-                  <Text style={[styles.imagePickerText, { color: currentColors.icon }]}>+ Add your files here</Text>
+                  <Text style={[styles.imagePickerText, { color: currentColors.icon }]}>+ Ajoutez vos fichiers ici</Text>
                 </TouchableOpacity>
 
                 <View style={styles.imagesContainer}>
@@ -255,15 +261,22 @@ export default function Report() {
                     <View key={index} style={styles.imageWrapper}>
                       <Image source={{ uri: image.uri }} style={styles.image} />
                       <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveImage(index)}>
-                        <Icons name="close-circle" size={24} color="red" />
+                        <Icons name="close-circle" size={24} color= 'red' />
                       </TouchableOpacity>
+                    </View>
+                  ))}
+
+                  {/* Placeholders */}
+                  {Array.from({ length: 3 - selectedImages.length }).map((_, index) => (
+                    <View key={index} style={styles.placeholder}>
+                      <Icons name="image-outline" size={50} color={currentColors.icon} />
                     </View>
                   ))}
                 </View>
               </View>
 
-              <View ref={section3Ref} style={styles.section}>
-                <Text style={styles.sectionTitle}>Location</Text>
+              <View /*ref={section3Ref}*/ style={styles.section}>
+                <Text style={styles.sectionTitle}>Localisation</Text>
                 <View style={styles.locationlayout}>
 
                   <TouchableOpacity style={styles.locationButton} onPress={requestLocation}>
@@ -276,7 +289,7 @@ export default function Report() {
 
                   <TextInput
                     style={[styles.input, { color: currentColors.text }]}
-                    placeholder="Object location"
+                    placeholder="Localisation en direct"
                     placeholderTextColor={currentColors.icon}
                     value={location ? `Lat: ${location.latitude}, Lon: ${location.longitude}` : ''}
                     editable={false}
@@ -308,7 +321,7 @@ export default function Report() {
             <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Descriptions</Text>
             <TextInput
               style={[styles.input, styles.textArea, { backgroundColor: currentColors.base, color: currentColors.text }]}
-              placeholder="More descriptions"
+              placeholder="Plus de descriptions..."
               placeholderTextColor={currentColors.icon}
               value={description}
               onChangeText={setDescription}
@@ -319,10 +332,11 @@ export default function Report() {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.text }]} onPress={handleReset}>
-              <Text style={[styles.buttonText, { color: currentColors.background }]}>Reset</Text>
+              <Text style={[styles.buttonText, { color: currentColors.background }]}>Réinitialiser</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleNext}>
-              <Text style={[styles.buttonText, { color: currentColors.background }]}>Next</Text>
+            <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleSubmit}>
+              <Text style={[styles.buttonText, { color: currentColors.background }]}>Envoyer</Text>
+              <ReportModal visible={isModalVisible} onClose={handleCloseModal} />
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -389,7 +403,7 @@ const styles = StyleSheet.create({
   },
   line2: {
     width: 4,
-    //height: 150,
+    height: 151,
     backgroundColor: '#e0e0e0',
     marginBottom: 10,
   },
@@ -441,8 +455,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   image: {
-    width: 95,
-    height: 95,
+    width: 85,
+    height: 85,
     borderRadius: 10,
     marginHorizontal: 5,
     marginBottom: 10,
@@ -453,6 +467,15 @@ const styles = StyleSheet.create({
     right: -5,
     backgroundColor: 'white',
     borderRadius: 12,
+  },
+  placeholder: {
+    width: 85,
+    height: 85,
+    marginHorizontal: 5,
+    borderRadius: 10,
+    backgroundColor: Colors.light.base,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   locationlayout: {
     flexDirection: 'row',

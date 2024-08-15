@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Defective streetlights' | 'Poorly lit areas needing new streetlights' | 'Issues with excessive or insufficient lighting intensity';
+type ReportType = '' | 'Lampadaires défectueux' | 'Zones mal éclairées nécessitant de nouveaux lampadaires' | "Problèmes d'intensité lumineuse excessive ou insuffisante";
 
 export default function StreetLights ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -27,25 +27,25 @@ export default function StreetLights ({ setLevel }: { setLevel: (level: number) 
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Defective streetlights
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Lampadaires défectueux
                         </Text>
-                        <RadioButton.Android value="Defective streetlights" 
+                        <RadioButton.Android value="Lampadaires défectueux" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Poorly lit areas{'\n'}needing new streetlights
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Zones mal éclairées nécessitant{'\n'}de nouveaux lampadaires
                         </Text>
-                        <RadioButton.Android value="Poorly lit areas needing new streetlights" 
+                        <RadioButton.Android value="Zones mal éclairées nécessitant de nouveaux lampadaires" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Issues with excessive or{'\n'}insufficient lighting intensity
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Problèmes d'intensité lumineuse{'\n'}excessive ou insuffisante
                         </Text>
-                        <RadioButton.Android value='Issues with excessive or insufficient lighting intensity' 
+                        <RadioButton.Android value="Problèmes d'intensité lumineuse excessive ou insuffisante" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>

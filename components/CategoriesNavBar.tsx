@@ -17,15 +17,15 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentColors, selectedTa
         contentContainerStyle={styles.navContainer}
       >
         {[
-          'Street lights',
-          'Public roads',
-          'Environment',
-          'Parks and gardens',
-          'Traffic and parking',
-          'Urban development',
-          'City services',
-          'Public safety',
-          'Social services'
+          'Éclairage public',
+          'Voirie',
+          'Environnement',
+          'Espaces verts',
+          'Transports et stationnement',
+          'Logement et urbanisme',
+          'Services municipaux',
+          'Sécurité publique',
+          'Services sociaux'
         ].map((tab) => (
           <TouchableOpacity
             key={tab}

@@ -36,9 +36,9 @@ export default function HomeScreen() {
 
           <View style={styles.intro}>
             <Text style={[styles.text, { color: currentColors.text, fontSize: 18, fontWeight: 'bold' }]}>
-              Stay Informed,{'\n'}
-              Stay Empowered,{'\n'}
-              Your Daily News Hub.
+              Restez informé,{'\n'}
+              restez autonome,{'\n'}
+              votre hub d'actualités quotidien.
             </Text>
           </View>
 

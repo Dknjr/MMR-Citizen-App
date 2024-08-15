@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Abandoned or bulky waste' | 'Cleaning of parks or public spaces' | 'Issues with spills or pollution';
+type ReportType = '' | 'Déchets abandonnés ou encombrants' | "Nettoyage de parcs ou d'espaces publics" | 'Problèmes de déversement ou de pollution';
 
 export default function Environment ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -27,25 +27,25 @@ export default function Environment ({ setLevel }: { setLevel: (level: number) =
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Abandoned or bulky waste
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Déchets abandonnés ou encombrants
                         </Text>
-                        <RadioButton.Android value="Abandoned or bulky waste" 
+                        <RadioButton.Android value="Déchets abandonnés ou encombrants" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Cleaning of parks or public{'\n'}spaces
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Nettoyage de parcs ou{'\n'}d'espaces publics
                         </Text>
-                        <RadioButton.Android value="Cleaning of parks or public spaces" 
+                        <RadioButton.Android value="Nettoyage de parcs ou d'espaces publics" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Issues with spills or pollution
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Problèmes de déversement{'\n'}ou de pollution
                         </Text>
-                        <RadioButton.Android value="Issues with spills or pollution" 
+                        <RadioButton.Android value="Problèmes de déversement ou de pollution" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>

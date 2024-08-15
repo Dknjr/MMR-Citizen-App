@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Sidewalk Repair' | 'Damaged or Missing Road Sign' | 'Potholes on the Road';
+type ReportType = '' | 'Réparation de trottoirs endommagés' | 'Nids-de-poule sur la route' | 'Signalisation routière manquante ou endommagée';
 
 export default function PublicRoad ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -27,25 +27,25 @@ export default function PublicRoad ({ setLevel }: { setLevel: (level: number) =>
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Sidewalk Repair
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Réparation de trottoirs{'\n'}endommagés
                         </Text>
-                        <RadioButton.Android value="Sidewalk Repair" 
+                        <RadioButton.Android value="Réparation de trottoirs endommagés" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Damaged or Missing{'\n'}Road Sign
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Nids-de-poule sur la route
                         </Text>
-                        <RadioButton.Android value="Damaged or Missing Road Sign" 
+                        <RadioButton.Android value="Nids-de-poule sur la route" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Potholes on the Road
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Signalisation routière{'\n'}manquante ou endommagée
                         </Text>
-                        <RadioButton.Android value="Potholes on the Road" 
+                        <RadioButton.Android value="Signalisation routière manquante ou endommagée" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>

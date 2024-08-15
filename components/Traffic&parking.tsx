@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Illegal parking problems' | 'Requests for new parking lots' | 'Repair or maintenance of public transport';
+type ReportType = '' | 'Problèmes de stationnement illégal' | "Demandes d'installation de nouveaux parcs de stationnement" | "Demandes d'installation de nouveaux parcs de stationnement";
 
 export default function Traffic ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -27,25 +27,25 @@ export default function Traffic ({ setLevel }: { setLevel: (level: number) => vo
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Illegal parking problems
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Problèmes de stationnement{'\n'}illégal
                         </Text>
-                        <RadioButton.Android value="Illegal parking problems" 
+                        <RadioButton.Android value="Problèmes de stationnement illégal" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Requests for new parking lots
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Demandes d'installation{'\n'}de nouveaux parcs de{'\n'}stationnement
                         </Text>
-                        <RadioButton.Android value="Requests for new parking lots" 
+                        <RadioButton.Android value="Demandes d'installation de nouveaux parcs de stationnement" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Repair or maintenance{'\n'}of public transport
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Réparation ou entretien{'\n'}des transports en commun
                         </Text>
-                        <RadioButton.Android value="Repair or maintenance of public transport" 
+                        <RadioButton.Android value="Demandes d'installation de nouveaux parcs de stationnement" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>

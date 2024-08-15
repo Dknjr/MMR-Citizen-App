@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Building safety inspections' | 'Violations of building regulations' | 'Requests for construction or renovation permits';
+type ReportType = '' | 'Inspections de sécurité des bâtiments' | 'Violations des règlements de construction' | 'Demandes de permis de construction ou de rénovation';
 
 export default function Urban ({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -27,26 +27,25 @@ export default function Urban ({ setLevel }: { setLevel: (level: number) => void
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Building safety inspections
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Inspections de sécurité des bâtiments
                         </Text>
-                        <RadioButton.Android value="Building safety inspections"
+                        <RadioButton.Android value="Inspections de sécurité des bâtiments"
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text} />
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Violations of building{'\n'}regulationsn
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Violations des règlements{'\n'}de construction
                         </Text>
-                        <RadioButton.Android value="Violations of building regulations" 
+                        <RadioButton.Android value="Violations des règlements de construction" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text
-                        style={[styles.radioButtonText, { color: currentColors.text }]}>Requests for construction{'\n'}
-                                                                                                or renovation permits
+                        style={[styles.radioButtonText, { color: currentColors.text }]}>Demandes de permis de construction ou de rénovation
                         </Text>
-                        <RadioButton.Android value="Requests for construction or renovation permits" 
+                        <RadioButton.Android value="Demandes de permis de construction ou de rénovation" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>

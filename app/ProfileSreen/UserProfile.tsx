@@ -8,8 +8,8 @@ import { Colors } from '@/constants/Colors'; // Assurez-vous que ce chemin est c
 
 export default function UserProfile() {
   const colorScheme = useColorScheme();
-    const isDarkMode = colorScheme === 'dark';
-    const currentColors = isDarkMode ? Colors.dark : Colors.light;
+  const isDarkMode = colorScheme === 'dark';
+  const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
   const router = useRouter();
   const [profile, setProfile] = useState({
@@ -36,11 +36,11 @@ export default function UserProfile() {
       <SafeAreaView style={[styles.container, {backgroundColor: currentColors.background}]}>
         <Stack.Screen
           options={{
-            headerTitle: 'Profile',
+            headerTitle: 'Profil',
               
             headerRight: () => (
               <Text style={styles.modifyButton} onPress={handleModifyPress}>
-                Modify
+                Modifier
               </Text>
             ),
           }}
@@ -53,15 +53,15 @@ export default function UserProfile() {
           />
           <View style={styles.infoContainer}>
             <View style={styles.top}>
-              <Text style={styles.label}>First Name</Text>
+              <Text style={styles.label}>Prénom</Text>
               <View style={styles.cell}>
-                <Text style={styles.value}>{profile.firstName || 'Your First Name'}</Text>
+                <Text style={styles.value}>{profile.firstName || 'Votre prénom'}</Text>
               </View>
             </View>
             <View style={styles.top}>
-              <Text style={styles.label}>Last Name</Text>
+              <Text style={styles.label}>Nom de famille</Text>
               <View style={styles.cell}>
-                <Text style={styles.value}>{profile.lastName || 'Your Last Name'}</Text>
+                <Text style={styles.value}>{profile.lastName || 'votre Nom de famille'}</Text>
               </View>
             </View>
           </View>

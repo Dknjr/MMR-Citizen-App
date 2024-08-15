@@ -25,7 +25,7 @@ export default function AddScreen() {
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, {backgroundColor: currentColors.background}]}>
         <View style={styles.notificationContainer}>
-          <Text style={[styles.text, { color: currentColors.text }]}>Report or Request?</Text>
+          <Text style={[styles.text, { color: currentColors.text }]}>Signalement ou Demande</Text>
           <View style={[styles.globalnotif, { backgroundColor: currentColors.text }]}>
             <Icons style={[styles.notif, { color: currentColors.background }]} name='notifications-outline' />
           </View>
@@ -36,12 +36,13 @@ export default function AddScreen() {
             <Image source={require('@/assets/images/Ordures.jpg')} style={styles.image} />
             <LinearGradient colors={['#D30000', '#120011']} style={styles.gradient1}>
               <Text style={styles.cardText1}>
-                Help us keep our city safe and clean! Report any incidents today and
-                make a difference in our community.
+              Aidez-nous à garder notre ville sûre et propre! 
+              Signalez tout incident dès aujourd'hui
+              et faites une différence dans notre communauté.
               </Text>
             </LinearGradient>
             <TouchableOpacity onPress={handleReportPress} style={styles.button1}>
-              <Text style={styles.cardTitle}>Report</Text>
+              <Text style={styles.cardTitle}>Signalement</Text>
             </TouchableOpacity>
             <Image source={require('@/assets/images/Megaphone.png')} style={styles.png1} />
           </View>
@@ -50,12 +51,13 @@ export default function AddScreen() {
             <Image source={require('@/assets/images/Ouvrier.jpg')} style={styles.image} />
             <LinearGradient colors={['#310042', '#FC5C7D']} style={styles.gradient2}>
               <Text style={styles.cardText2}>
-                Your voice matters! Submit your citizen requests today and help
-                improve our community.
+              Votre voix compte! Soumettez vos demandes
+              citoyennes dès aujourd'hui et
+              contribuez à améliorer notre communauté
               </Text>
             </LinearGradient>
             <TouchableOpacity onPress={handleRequestPress} style={styles.button2}>
-              <Text style={styles.cardTitle}>Request</Text>
+              <Text style={styles.cardTitle}>Demande</Text>
             </TouchableOpacity>
             <Image source={require('@/assets/images/equality.png')} style={styles.png2} />
           </View>
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   globalnotif: {
@@ -121,14 +123,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardText1: {
-    width: 175,
+    width: 205,
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'right',
   },
   cardText2: {
-    width: 190,
+    width: 220,
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',

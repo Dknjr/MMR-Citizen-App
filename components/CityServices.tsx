@@ -5,7 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Issues related to water and sanitation services' | 'Requests for information on the opening hours of municipal services' | 'Reporting outages in online municipal services';
+type ReportType = '' | "Problèmes liés aux services d'eau et d'assainissement" | "Demandes de renseignements sur les horaires d'ouverture des services municipaux" | 'Signalement de pannes dans les services municipaux en ligne';
 
 export default function City({ setLevel }: { setLevel: (level: number) => void }) {
     const [selectedReport, setSelectedReport] = useState<ReportType>('');
@@ -28,10 +28,10 @@ export default function City({ setLevel }: { setLevel: (level: number) => void }
                 <View style={[styles.radioButtonContainer, { backgroundColor: currentColors.base }]}>
                     <Text
                         style={[styles.radioButtonText, { color: currentColors.text }]}>
-                        Issues related to water{'\n'}and sanitation services
+                        Problèmes liés aux services{'\n'}d'eau et d'assainissement
                     </Text>
                     <RadioButton.Android
-                        value="Issues related to water and sanitation services"
+                        value="Problèmes liés aux services d'eau et d'assainissement"
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}
                     />
@@ -39,10 +39,10 @@ export default function City({ setLevel }: { setLevel: (level: number) => void }
                 <View style={[styles.radioButtonContainer, { backgroundColor: currentColors.base }]}>
                     <Text
                         style={[styles.radioButtonText, { color: currentColors.text }]}>
-                        Requests for information{'\n'}on the opening hours{'\n'}of municipal services
+                        Demandes de renseignements{'\n'}surles horaires d'ouverture{'\n'}des services municipaux
                     </Text>
                     <RadioButton.Android
-                        value="Requests for information on the opening hours of municipal services"
+                        value="Demandes de renseignements sur les horaires d'ouverture des services municipaux"
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}
                     />
@@ -50,10 +50,10 @@ export default function City({ setLevel }: { setLevel: (level: number) => void }
                 <View style={[styles.radioButtonContainer, { backgroundColor: currentColors.base }]}>
                     <Text
                         style={[styles.radioButtonText, { color: currentColors.text }]}>
-                        Reporting outages in{'\n'}online municipal services
+                        Signalement de pannes{'\n'}dans lesservices{'\n'}municipaux en ligne
                     </Text>
                     <RadioButton.Android
-                        value="Reporting outages in online municipal services"
+                        value="Signalement de pannes dans les services municipaux en ligne"
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}
                     />

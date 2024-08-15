@@ -1,5 +1,4 @@
 import { Colors } from '@/constants/Colors'; // Suppose you have a Colors.js file managing the light and dark colors.
-import Icon from '@expo/vector-icons/Ionicons';
 import { useRouter, Stack } from 'expo-router';
 
 import React from 'react';
@@ -13,7 +12,7 @@ import {
   useColorScheme,
 } from 'react-native';
 
-export default function Profile() {
+export default function ModifyProfile() {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -27,33 +26,33 @@ export default function Profile() {
     <SafeAreaView style={[styles.container, { backgroundColor: currentColors.background }]}>
       <Stack.Screen
           options={{
-            headerTitle: 'Modify',
+            headerTitle: 'Modifier',
               
             headerRight: () => (
               <Text style={styles.SaveButton} onPress={handleSavePress}>
-                Save
+                Enrégistrer
               </Text>
             ),
           }}
         />
 
       <View style={styles.form}>
-        <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Modify your personal information</Text>
+        <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Modifiez vos informations personnelles</Text>
 
         <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: currentColors.text }]}>First Name</Text>
+          <Text style={[styles.label, { color: currentColors.text }]}>Prénom</Text>
           <TextInput
             style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter your First Name"
+            placeholder="Entrez votre prénom"
             placeholderTextColor={currentColors.icon}
           />
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: currentColors.text }]}>Last Name</Text>
+          <Text style={[styles.label, { color: currentColors.text }]}>Nom de famille</Text>
           <TextInput
             style={[styles.input, { backgroundColor: currentColors.base, color: currentColors.text }]}
-            placeholder="Enter your Last Name"
+            placeholder="Enter votre nom de famille"
             placeholderTextColor={currentColors.icon}
           />
         </View>
