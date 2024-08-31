@@ -18,7 +18,7 @@ import Urban from '@/components/UrbanDevelopment';
 import City from '@/components/CityServices';
 import Public from '@/components/PublicSafety';
 import Social from '@/components/SocialServices';
-import ReportModal from '@/app/Modals/reportModal';
+import ReportModal from '@/components/Modals/reportModal';
 
 export default function Report() {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -208,6 +208,7 @@ export default function Report() {
     <SafeAreaProvider>
       <Stack.Screen
           options={{
+          
             headerTitle: 'Signalement'
           }}
         />

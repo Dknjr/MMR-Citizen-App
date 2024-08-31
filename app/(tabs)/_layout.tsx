@@ -20,7 +20,7 @@ export default function TabLayout() {
         headerShown: false,
       }}>
       <Tabs.Screen
-        name="index"
+        name="accueil"
         options={{
           title: 'Infos',
           tabBarIcon: ({ color, focused }) => (
@@ -35,6 +35,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'add-circle' : 'add-circle-outline'} color={color} />
           ),
+          headerShown: true,
         }}
       />
       <Tabs.Screen

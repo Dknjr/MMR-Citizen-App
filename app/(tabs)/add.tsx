@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Icons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 
 export default function AddScreen() {
   const router = useRouter();  
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: true });
+  }, [navigation]);
 
   const handleReportPress = () => {
     router.push('/Report');

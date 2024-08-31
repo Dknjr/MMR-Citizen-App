@@ -9,6 +9,7 @@ import Icons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useAuth } from '@/context/auth';
 
 export default function UserProfile() {
   //const [language, setLanguage] = useState(i18n.language)
@@ -23,9 +24,12 @@ export default function UserProfile() {
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
+  const { logout } = useAuth();
 
   const handleLogoutPress = () => {
     // Logique de déconnexion ici
+    logout()
+    router.replace('/(auth)/login')
     Alert.alert("Déconnecté", "Vous avez été déconnecté avec succès!");
     setModalVisible(false);
   };

@@ -5,7 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import * as ImagePicker from 'expo-image-picker';
-import RequestModal from './Modals/RequestModal';
+import RequestModal from '../components/Modals/RequestModal';
 
 export default function SubmitRequest() {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -114,7 +114,7 @@ export default function SubmitRequest() {
               <Text style={[styles.title, { color: Colors.light.tint }]}>SOUMETTRE UNE DEMANDE</Text>
             </View>
             <Text style={[styles.description, { color: currentColors.text }]}>
-              Lorem ipsum dolor sit amet consectetur. Diam in eget eget massa tortor.
+            Veuillez remplir les informations ci-dessous pour soumettre votre demande.
             </Text>
 
             <Text style={[styles.titles, { color: currentColors.text }]}>Prénom</Text>
