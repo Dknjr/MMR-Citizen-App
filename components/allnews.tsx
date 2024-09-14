@@ -3,6 +3,7 @@ import React from 'react';
 import { Colors } from '@/constants/Colors';
 import { View, Text, StyleSheet, Image, ScrollView,TouchableOpacity, Touchable } from 'react-native';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function AllNews() {
 
@@ -21,29 +22,34 @@ export default function AllNews() {
             <TouchableOpacity style= {styles.touchable}>
               <View style={styles.container}>
                 <View style={styles.card}>
-                  <Image style={styles.image} source={{ uri: 'https://path.to/rfi-image.jpg' }} />
+                  <Image style={styles.image} source={require('@/assets/images/RFi.jpg')} />
+                  <LinearGradient colors={['#000', '#000']} style={styles.gradient}/>
                   <View style={styles.textContainer}>
                     <Text style={styles.title}>RFI</Text>
-                    <Text style={styles.description}>Lorem ipsum dolor sit amet consectetur.</Text>
+                    <Text style={styles.description}>Suivez avec nous les actualités du pays!</Text>
                   </View>
                 </View>
               </View>
             </TouchableOpacity>
+
             <TouchableOpacity style= {styles.touchable}>
               <View style={styles.container}>
               <View style={styles.card}>
-                  <Image style={styles.image} source={{ uri: 'https://path.to/tgsport-image.jpg' }} />
+                <Image style={styles.image} source={require('@/assets/images/TgSport.png')} />
+                <LinearGradient colors={['#000', '#000']} style={styles.gradient}/>
                   <View style={styles.textContainer}>
                     <Text style={styles.title}>TgSport</Text>
-                    <Text style={styles.description}>Lorem ipsum dolor sit amet consectetur.</Text>
+                    <Text style={styles.description}>Togo Sport infos.</Text>
                   </View>
                 </View>
               </View>
             </TouchableOpacity>
+
             <TouchableOpacity style= {styles.touchable}>
               <View style={styles.container}>
               <View style={styles.card}>
-                  <Image style={styles.image} source={{ uri: 'https://path.to/togo-info-image.jpg' }} />
+                <Image style={styles.image} source={require('@/assets/images/Togo_info.jpg')} />
+                <LinearGradient colors={['#000', '#000']} style={styles.gradient}/>
                   <View style={styles.textContainer}>
                     <Text style={styles.title}>Togo_info</Text>
                     <Text style={styles.description}>Lorem ipsum dolor sit amet consectetur.</Text>
@@ -51,10 +57,12 @@ export default function AllNews() {
                 </View>
               </View>
             </TouchableOpacity>
+
             <TouchableOpacity style= {styles.touchable}>
               <View style={styles.container}>
               <View style={styles.card}>
-                  <Image style={styles.image} source={{ uri: 'https://path.to/togo-info-image.jpg' }} />
+                <Image style={styles.image} source={require('@/assets/images/students.jpg')} />
+                <LinearGradient colors={['#000', '#000']} style={styles.gradient}/>
                   <View style={styles.textContainer}>
                     <Text style={styles.title}>Education</Text>
                     <Text style={styles.description}>Lorem ipsum dolor sit amet consectetur.</Text>
@@ -62,6 +70,7 @@ export default function AllNews() {
                 </View>
               </View>
             </TouchableOpacity>
+
           </View>
       </ScrollView>
     </View>
@@ -89,7 +98,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   card: {
-    marginVertical: 0,
     borderRadius: 10,
     overflow: 'hidden',
     justifyContent: 'space-around',
@@ -97,8 +105,19 @@ const styles = StyleSheet.create({
     height: 150,
   },
   image: {
-    width: '100%',
-    height: 50,
+    position: 'absolute',
+    width: '150%',
+    height: '150%',
+    top: -50,
+    left: -50,
+  },
+  gradient: {
+    position: 'absolute',
+    width: '150%',
+    height: '150%',
+    top: -50,
+    left: -50,
+    opacity: 0.8,
   },
   textContainer: {
     padding: 10,
@@ -106,8 +125,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
   },
   description: {
     fontSize: 14,
+    color: '#fff',
+
   },
 });

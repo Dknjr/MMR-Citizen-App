@@ -4,8 +4,11 @@ import { View, Text, TextInput,  TouchableOpacity, StyleSheet, ScrollView, Alert
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import Icons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import RequestModal from '../components/Modals/RequestModal';
+import { useAuth } from '@/context/auth';
+
 
 export default function SubmitRequest() {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -15,6 +18,7 @@ export default function SubmitRequest() {
   const [mobile, setMobile] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const { getToken, getUserId } = useAuth();
   const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
 
   const handleReset = () => {
@@ -32,38 +36,54 @@ export default function SubmitRequest() {
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
   const pickImage = async () => {
+    // Vérifier si l'utilisateur a donné la permission d'accéder à la bibliothèque
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert("Cette Aplication souhaite accéder à l'appareil photo !");
+      alert("Cette Application souhaite accéder à l'appareil photo !");
       return;
     }
-
+  
+    // Vérifier si le nombre d'images est déjà au maximum
+    if (selectedImages.length >= 3) {
+      alert("Vous ne pouvez ajouter que 3 images au maximum.");
+      return;
+    }
+  
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       quality: 1,
     });
-
+  
     if (!result.canceled) {
-      setSelectedImages([...selectedImages, ...result.assets]);
+      // Calculer combien d'images peuvent encore être ajoutées
+      const imagesToAdd = result.assets.slice(0, 3 - selectedImages.length);
+      setSelectedImages([...selectedImages, ...imagesToAdd]);
     }
   };
-
+  
   const takePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      alert("Cette Aplication souhaite accéder à l'appareil photo !");
+      alert("Cette Application souhaite accéder à l'appareil photo !");
       return;
     }
-
+  
+    if (selectedImages.length >= 3) {
+      alert("Vous ne pouvez ajouter que 3 images au maximum.");
+      return;
+    }
+  
     let result = await ImagePicker.launchCameraAsync({
       quality: 1,
     });
-
+  
     if (!result.canceled) {
+      // Ajouter la photo si la limite n'est pas atteinte
       setSelectedImages([...selectedImages, result.assets[0]]);
     }
   };
+  
 
   const handleAttachmentPress = () => {
     Alert.alert(
@@ -87,8 +107,67 @@ export default function SubmitRequest() {
     );
   };
 
-  const handleSubmit = () => {
-    setModalVisible(true);
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = selectedImages.filter((_, i) => i !== index);
+    setSelectedImages(updatedImages);
+    if (updatedImages.length === 0) {
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Vérifiez que tous les champs nécessaires sont remplis
+    if (!firstName || !lastName || !email || !subject || !message) {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires.');
+      return;
+    }
+
+    // Créez un objet FormData pour rassembler les données de la demande
+    const formData = new FormData();
+    const token = await getToken();
+    const userId = await getUserId();
+
+
+    // Ajoutez les informations de texte
+    formData.append('nom', lastName);
+    formData.append('prenom', firstName);
+    formData.append('email', email);
+    formData.append('sujet', subject);
+    formData.append('message', message);
+    
+    // Ajoutez les fichiers (images) à FormData
+    selectedImages.forEach((image, index) => {
+      formData.append('fichiersPreuves', {
+        uri: image.uri,
+        name: `preuve_${index}.jpg`, // Nom du fichier
+        type: 'image/jpeg/jpg', // Type du fichier
+      }as any);
+    });
+
+    try {
+      // Effectuez une requête POST à l'API
+      const response = await fetch(`http://192.168.1.75:20/api/user/faire-demande/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      // Vérifiez la réponse de l'API
+      if (response.ok) {
+        const responseData = await response.json();
+        setModalVisible(true);
+        handleReset(); // Réinitialiser les champs après un envoi réussi
+      } else {
+        // Gérer les erreurs de l'API
+        const errorData = await response.json();
+        Alert.alert('Erreur', errorData.message || 'Une erreur est survenue lors de la soumission de la demande.');
+      }
+    } catch (error) {
+      // Gérer les erreurs de la requête
+      console.error('Erreur de la requête:', error);
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la soumission de la demande.');
+    }
   };
 
   const handleCloseModal = () => {
@@ -181,10 +260,14 @@ export default function SubmitRequest() {
             <TouchableOpacity style={[styles.attachment, { backgroundColor: currentColors.base }]} onPress={handleAttachmentPress}>
               <Text style={[styles.attachmentText, { color: currentColors.icon }]}>+ Ajoutez vos fichiers ici</Text>
             </TouchableOpacity>
-
-            <View style={styles.imageContainer}>
+            <View style={styles.imagesContainer}>
               {selectedImages.map((image, index) => (
-                <Image key={index} source={{ uri: image.uri }} style={styles.thumbnail} />
+                <View key={index} style={styles.imageWrapper}>
+                  <Image source={{ uri: image.uri }} style={styles.image} />
+                  <TouchableOpacity style={styles.removeButton} onPress={() => handleRemoveImage(index)}>
+                    <Icons name="close-circle" size={24} color= 'red' />
+                  </TouchableOpacity>
+                </View>
               ))}
             </View>
 
@@ -267,10 +350,27 @@ const styles = StyleSheet.create({
   attachmentText: {
     fontSize: 16,
   },
-  imageContainer: {
+  imagesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 30,
+    marginTop: 10,
+  },
+  imageWrapper: {
+    position: 'relative',
+  },
+  image: {
+    width: 90,
+    height: 90,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginBottom: 25,
+  },
+  removeButton: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: 'white',
+    borderRadius: 12,
   },
   thumbnail: {
     width: 100,

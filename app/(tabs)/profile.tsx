@@ -1,7 +1,8 @@
 //import { I18nextProvider } from 'react-i18next';
 //import { useTranslation } from 'react-i18next';
-import React, { useState, useRef } from 'react';
-import { Image, View, Text, Modal, TouchableOpacity,TextInput, Alert, StyleSheet, TouchableWithoutFeedback, PanResponder, Animated } from 'react-native';
+//const [language, setLanguage] = useState(i18n.language)
+import React, { useState, useRef, useEffect } from 'react';
+import { Image, View, Text, Modal, TouchableOpacity, TextInput, Alert, StyleSheet, TouchableWithoutFeedback, PanResponder, Animated } from 'react-native';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -12,7 +13,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useAuth } from '@/context/auth';
 
 export default function UserProfile() {
-  //const [language, setLanguage] = useState(i18n.language)
   const [modalVisible, setModalVisible] = useState(false);
   const panY = useRef(new Animated.Value(0)).current;
   const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
@@ -24,15 +24,55 @@ export default function UserProfile() {
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
-  const { logout } = useAuth();
+
+  // Utilisation du contexte pour obtenir les informations de l'utilisateur connecté
+  const { logout, user } = useAuth();
+  const [userData, setUserData] = useState<{ username: string; email: string } | null>(null);
+
+  {/*useEffect(() => {
+    if (user) {
+      // Remplacez ces appels par les fonctions qui récupèrent réellement les données de l'utilisateur
+      const fetchUserData = async () => {
+        // Exemple d'appel d'API pour récupérer les informations de l'utilisateur
+        try {
+          const response = await fetch(`http://votre-api-url/api/user/${user.id}`);
+          const data = await response.json();
+          setUserData({
+            username: data.username,
+            email: data.email,
+          });
+        } catch (error) {
+          console.error("Erreur lors de la récupération des données de l'utilisateur:", error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [user]);*/}
 
   const handleLogoutPress = () => {
-    // Logique de déconnexion ici
-    logout()
-    router.replace('/(auth)/login')
-    Alert.alert("Déconnecté", "Vous avez été déconnecté avec succès!");
-    setModalVisible(false);
-  };
+    Alert.alert(
+      "Confirmation de déconnexion",
+      "Êtes-vous sûr de vouloir vous déconnecter ?",
+      [
+        {
+          text: "Annuler",
+          style: "cancel",
+        },
+        {
+          text: "Se déconnecter",
+          onPress: () => {
+            // Appel de la fonction logout pour effectuer la déconnexion
+            logout();
+            Alert.alert("Déconnecté", "Vous avez été déconnecté avec succès!");
+            console.log('Déconnexion réussie');
+            router.replace('/(auth)/login')
+          },
+          style: "destructive", // Style rouge pour indiquer une action destructrice
+        },
+      ]
+    );
+  };  
 
   const resetPosition = Animated.spring(panY, {
     toValue: 0,
@@ -168,7 +208,9 @@ export default function UserProfile() {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.profileName}>Laura AGBEDOUVI</Text>
+          {/* Affichage du nom d'utilisateur et de l'email */}
+        <Text style={styles.profileName}>{userData?.username || 'Nom d’utilisateur'}</Text>
+        <Text style={styles.profileDescription}>{userData?.email || 'Email utilisateur'}</Text>
           <Text style={styles.profileDescription}>
             Lorem ipsum dolor sit amet consectetur. Ultrices facilisis
           </Text>
@@ -213,12 +255,11 @@ export default function UserProfile() {
             </View>
             <Icons name="chevron-forward" size={30} color={currentColors.icon} />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.menuItem, { backgroundColor: currentColors.menubase }]} onPress={() => setModalVisible(true)}>
+          <TouchableOpacity style={[styles.Déconnexion, { backgroundColor: '#FF7900' }]} onPress={handleLogoutPress}>
             <View style={styles.menuItemLeft}>
-              <FontAwesome6 name="heart-crack" size={30} color={currentColors.icon} />
-              <Text style={styles.menuItemText}>Déconnexion</Text>
+              <FontAwesome6 name="heart-crack" size={30} color={'#fff'} />
+              <Text style={styles.DecoText}>Déconnexion</Text>
             </View>
-            <Icons name="chevron-forward" size={30} color={currentColors.icon} />
           </TouchableOpacity>
           <Modal
             transparent={true}
@@ -259,36 +300,6 @@ export default function UserProfile() {
               </View>
             </BlurView>
           </Modal>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            presentationStyle="overFullScreen"
-            onRequestClose={() => {
-              setModalVisible(false);
-            }}
-          >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-            <View style={styles.modalOverlay}>
-              <TouchableWithoutFeedback>
-                <Animated.View
-                  style={[styles.modalContent, { transform: [{ translateY: panY }] }]}
-                  {...panResponder.panHandlers}
-                >
-                  <View style={styles.dragIndicator} />
-                  <Text style={styles.modalTitle}>Déconnexion</Text>
-                  <Text style={styles.modalMessage}>Voulez-vous vraiment vous déconnecter?</Text>
-                  <TouchableOpacity style={styles.logoutActionButton} onPress={handleLogoutPress}>
-                    <FontAwesome6 name="heart-crack" size={24} color="red" />
-                    <Text style={styles.logoutActionButtonText}>Se déconnecter</Text>
-                  </TouchableOpacity>
-                </Animated.View>
-              </TouchableWithoutFeedback>
-            </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-          
         </View>
       </View>
     //</I18nextProvider>
@@ -398,7 +409,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 20,
+    borderRadius: 50,
     marginBottom: 10,
     elevation: 5, // Pour l'ombre sur Android
     shadowColor: '#000',
@@ -406,6 +417,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.10,
     shadowRadius: 3.84, // Pour l'ombre sur iOS
   },
+  Déconnexion: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 20,
+    elevation: 5, // Pour l'ombre sur Android
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.10,
+    shadowRadius: 3.84, // Pour l'ombre sur iOS
+  },
+  DecoText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 20,
+    color: '#fff',
+  },
+  // Déconnexion
   menuItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',

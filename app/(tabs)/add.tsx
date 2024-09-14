@@ -12,11 +12,7 @@ export default function AddScreen() {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
-  const navigation = useNavigation();
 
-  useEffect(() => {
-    navigation.setOptions({ headerShown: true });
-  }, [navigation]);
 
   const handleReportPress = () => {
     router.push('/Report');

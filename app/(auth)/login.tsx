@@ -3,40 +3,67 @@ import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert } fro
 import { useAuth } from '@/context/auth'; // Assurez-vous que le chemin est correct
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 //import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 //import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 export default function LoginScreen() {
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
-  const currentColors = isDarkMode ? Colors.dark : Colors.light;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
   const router = useRouter();
 
+  const handleAuthLogin = async () => {
+    try {
+      const response = await fetch('http://192.168.1.75:20/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur de connexion');
+      }
+
+      const data = await response.json();
+
+      // Vérifiez la réponse et gérez les informations d'authentification
+      if (data && data.token) {
+        const user = {
+          id: data.userId,
+          name: data.name,
+          email: data.email,
+        };
+        const token = data.token;
+
+        login(user, token);  // Stocke l'utilisateur dans le contexte d'authentification
+        router.replace('/(tabs)/accueil'); // Redirige vers la page d'accueil
+      } else {
+        Alert.alert(
+          'Erreur de connexion',
+          'Email ou mot de passe incorrect. Veuillez réessayer.',
+          [{ text: 'OK' }],
+        );
+      }
+    } catch (error) {
+      console.error('Erreur lors de la connexion:', error);
+      Alert.alert(
+        'Erreur',
+        'Une erreur s\'est produite lors de la tentative de connexion. Veuillez réessayer.',
+        [{ text: 'OK' }],
+      );
+    }
+  };
+  
   /*useEffect(() => {
       GoogleSignin.configure({
           webClientId: 'YOUR_GOOGLE_WEB_CLIENT_ID',
       });
   }, []);*/
-
-  const handleLogin = () => {
-      if (email === 'test@example.com' && password === 'password') {
-          const user = {
-              id: '1',
-              name: 'Test User',
-              email: 'test@example.com',
-              image: 'https://example.com/user-image.png',
-          };
-          login(user);
-          router.replace('/(tabs)/accueil');
-      } else {
-          Alert.alert('Erreur', 'Email ou mot de passe incorrect');
-      }
-  };
-
   /*const handleFacebookLogin = async () => {
       try {
           const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
@@ -60,7 +87,6 @@ export default function LoginScreen() {
           Alert.alert('Erreur', err.message);
       }
   };*/
-
   /*const handleGoogleLogin = async () => {
       try {
           await GoogleSignin.hasPlayServices();
@@ -85,6 +111,7 @@ export default function LoginScreen() {
               Alert.alert('Erreur', err.message);
           }
       }*/
+
      return (
          <View style={styles.container}>
              <Image source={require('@/assets/images/authdesign.png')} style={styles.image} />
@@ -108,7 +135,7 @@ export default function LoginScreen() {
                      placeholderTextColor="#999"
                  />
              </View>
-             <TouchableOpacity style={styles.button} onPress={handleLogin}>
+             <TouchableOpacity style={styles.button} onPress={handleAuthLogin}>
                  <Text style={styles.buttonText}>Log in</Text>
              </TouchableOpacity>
              <View style={styles.alternative}>

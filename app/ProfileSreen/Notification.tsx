@@ -55,7 +55,7 @@ const NotificationSettings = () => {
 
       <View style={styles.notificationCard}>
         <View style={styles.header}>
-          <Icon name="alert-circle" size={24} color={currentColors.tint} />
+          <Icon name="alert-circle" size={24} color= '#FF7900' />
           <Text style={styles.notificationTitle}> Activez les notifications</Text>
         </View>
         <Text style={styles.notificationMessage}>

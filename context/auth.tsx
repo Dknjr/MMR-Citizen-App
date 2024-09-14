@@ -5,12 +5,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextType {
     user: any;
-    login: (user: any) => void;
+    login: (user: any, token: string) => void;
     logout: () => void;
+    getToken: () => Promise<string | null>;
+    getUserId: () => Promise<string | null>;
 }
 
 interface User {
-    id: string;
+    username: string;
+    id: number;
     name: string;
     email: string;
     image: string;
@@ -57,18 +60,58 @@ export function Provider({ children }: { children: React.ReactNode }) : JSX.Elem
   }, []);
 
   ProtectAuth(user);
-
-  function login(user: User) {
-    setUser(user);
-    AsyncStorage.setItem('user', JSON.stringify(user));
+  //fonction GetToken
+  async function getToken(): Promise<string | null> {
+    try {
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            return user.token;
+        }
+        return null;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+async function getUserId(): Promise<string | null> {
+  try {
+    const storedUser = await AsyncStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      console.log('User data:', user);  // Ajoutez un log pour déboguer
+      console.log('User stored in AsyncStorage:', user); // Log les données de l'utilisateur stockées
+      return user.id ? user.id.toString() : null; // Vérifiez que l'ID est bien présent et renvoyez-le
+    }
+    return null;
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'ID utilisateur:', error);
+    return null;
   }
+}
+
+
+  //
+  function login(user: User, token: string) {
+    const userWithToken = { ...user, token };  // Ajoute le token à l'objet utilisateur
+    setUser(userWithToken);
+    AsyncStorage.setItem('user', JSON.stringify(userWithToken)); // Stocke l'utilisateur avec l'ID
+  }
+  
   function logout() {
     setUser(null);
     AsyncStorage.removeItem('user');
   }
+  const authContextValue: AuthContextType = {
+    user,
+    login,
+    logout,
+    getToken,
+    getUserId
+  };
   return (
-      <AuthContexte.Provider value={{ user, login, logout }}>
-          {children}
+      <AuthContexte.Provider value={{ user, login, logout, getToken, getUserId }} >
+        {children}
       </AuthContexte.Provider>
   );
 }

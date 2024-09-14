@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
@@ -23,6 +23,7 @@ export default function Loading() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+      <Image source={require('@/assets/images/authdesign.png')} style={styles.image} />
         <View >
           <Text style={styles.title}>
             United for action, {'\n'}citizens for change:
@@ -47,10 +48,14 @@ export default function Loading() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1C1115', // Dark background
+    backgroundColor: '#20001F',
     paddingTop: 50,
     paddingHorizontal: 20,
   },
+  image: {
+    position: 'absolute',
+    bottom: 0,
+},
   title: {
     color: '#FFFFFF', // White text color
     fontSize: 24,

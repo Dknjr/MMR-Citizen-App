@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Stack } from 'expo-router';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, ActivityIndicator, ImageComponent } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -19,20 +19,110 @@ import City from '@/components/CityServices';
 import Public from '@/components/PublicSafety';
 import Social from '@/components/SocialServices';
 import ReportModal from '@/components/Modals/reportModal';
+import { useRouter } from 'expo-router';
+import axios from 'axios';
+import { useAuth } from '@/context/auth';
+
 
 export default function Report() {
+  const router = useRouter();  
   const [isModalVisible, setModalVisible] = useState(false);
   const [level, setLevel] = useState(0);
   const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>(null);
   const [description, setDescription] = useState<string>('');
-  const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState<{ uri: string }[]>([]);
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
-  const [selectedTab, setSelectedTab] = useState('Éclairage public');
-
+  const [selectedCategory, setSelectedCategory] = useState('Éclairage public');
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
+  const { getToken, getUserId } = useAuth();
+  const [loading, setLoading] = React.useState(false);
+
+  
+  // Fonction pour soumettre des données à l'API
+  const submitData = async () => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('description', description);
+      formData.append('categories', selectedCategory);
+      formData.append('localisation', JSON.stringify(location));
+
+      // Ajoutez les fichiers (images) à FormData
+      selectedImages.forEach((image, index) => {
+        formData.append('fichiersPreuves', {
+          uri: image.uri,
+          name: `preuve_${index}.jpg`, // Nom du fichier
+          type: 'image/jpeg/jpg', // Type du fichier
+        }as any);
+      });
+
+      // Vérifiez et affichez les valeurs de selectedCategory et location
+      console.log('Selected Category:', selectedCategory);
+      console.log('Location:', location);
+  
+      // Assurez-vous que selectedCategory et location sont définis
+      if (!selectedCategory) {
+        Alert.alert('Veuillez sélectionner une catégorie.');
+        setLoading(false); // Arrête le chargement en cas d'erreur
+        return;
+      }
+  
+      if (!location) {
+        Alert.alert('Veuillez fournir une localisation.');
+        setLoading(false); // Arrête le chargement en cas d'erreur
+        return;
+      }
+  
+      // Catégorie
+      formData.append('categories', selectedCategory);
+  
+      // Localisation
+      formData.append('localisation', JSON.stringify(location));
+  
+      // Récupération du token et de l'ID utilisateur
+      const token = await getToken();
+        // Récupérer le token du contexte d'authentification
+      const userId = await getUserId(); // Fonction pour obtenir l'ID utilisateur
+  
+      if (!token) {
+        Alert.alert('Token non disponible. Veuillez vous reconnecter.');
+        setLoading(false);
+        return;
+      }
+  
+      if (!userId) {
+        Alert.alert('ID utilisateur non disponible. Veuillez vous reconnecter.');
+        setLoading(false);
+        return;
+      }
+  
+      // Envoi de la requête avec les données multipart
+      const response = await axios.post(
+        `http://192.168.1.75:20/api/user/lance-signalement/${userId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        Alert.alert('Signalement soumis avec succès!');
+      } else {
+        Alert.alert('Erreur lors de la soumission du signalement');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erreur lors de la soumission du signalement');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (selectedImages.length > 0 && level >= 1) {
@@ -163,15 +253,7 @@ export default function Report() {
     );
   };
 
-  const handleReset = () => {
-    setLocation(null);
-    setDescription('');
-    setSelectedImages([]);
-    setIsLocationSet(false);
-    setLevel(0);
-    setSelectedTab('Éclairage public');
-  };
-
+  
   const handleRemoveImage = (index: number) => {
     const updatedImages = selectedImages.filter((_, i) => i !== index);
     setSelectedImages(updatedImages);
@@ -180,9 +262,9 @@ export default function Report() {
     }
   };
   
-
+  
   const renderContent = () => {
-    switch (selectedTab) {
+    switch (selectedCategory) {
       case 'Éclairage public': return <StreetLights setLevel={setLevel} />;
       case 'Voirie': return <PublicRoad setLevel={setLevel} />;
       case 'Environnement': return <Environment setLevel={setLevel} />;
@@ -195,31 +277,49 @@ export default function Report() {
       default: return <StreetLights setLevel={setLevel} />;
     }
   };
-
-  const handleSubmit = () => {
-    setModalVisible(true);
+  
+  const handleReset = () => {
+    setLocation(null);
+    setDescription('');
+    setSelectedImages([]);
+    setIsLocationSet(false);
+    setLevel(0);
+    setSelectedCategory('Éclairage public');
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
   };
 
+  const handleBackPress = () => {
+    router.push('/(tabs)/add');
+  };
+
   return (
     <SafeAreaProvider>
       <Stack.Screen
           options={{
-          
-            headerTitle: 'Signalement'
+
+            headerTitle: 'Signalement',
+
           }}
         />
       <SafeAreaView style={[styles.container, { backgroundColor: currentColors.background }]}>
+        {/*<View style={styles.pageheader}>
+          <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
+            <Icons name="chevron-back" size={25} color={currentColors.text} />
+            <Text style={[{ fontSize: 18, color: currentColors.text }]} >Retour</Text>
+          </TouchableOpacity>
+          <Text style={[styles.headertitle, { color: currentColors.text }]}>Signalement</Text>
+        </View>*/}
+
         <View style={styles.headerStyle}>
           <View style={styles.header}>
             <Text style={[styles.title, { color: Colors.light.tint }]}>Aujourd'hui</Text>
             <Text style={[styles.date, { color: currentColors.text }]}>{getCurrentDate()}</Text>
           </View>
           <Text style={[styles.category, { color: currentColors.text }]}>Catégories</Text>
-          <CategoriesNavBar currentColors={currentColors} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+          <CategoriesNavBar currentColors={currentColors} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
         </View>
 
         <ScrollView
@@ -227,7 +327,7 @@ export default function Report() {
           scrollIndicatorInsets={{ right: -2 }}>
 
           <View style={styles.content}>
-            <View style={styles.TimelineContainer}>
+            <View>
               <View style={styles.timeline}>
                 <View style={[styles.circle, level >= 1 && styles.completedCircle]}>
                   <Text style={styles.circleText}>1</Text>
@@ -276,7 +376,7 @@ export default function Report() {
                 </View>
               </View>
 
-              <View /*ref={section3Ref}*/ style={styles.section}>
+              <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Localisation</Text>
                 <View style={styles.locationlayout}>
 
@@ -335,7 +435,7 @@ export default function Report() {
             <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.text }]} onPress={handleReset}>
               <Text style={[styles.buttonText, { color: currentColors.background }]}>Réinitialiser</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={handleSubmit}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: currentColors.tint }]} onPress={submitData}>
               <Text style={[styles.buttonText, { color: currentColors.background }]}>Envoyer</Text>
               <ReportModal visible={isModalVisible} onClose={handleCloseModal} />
             </TouchableOpacity>
@@ -355,14 +455,35 @@ const styles = StyleSheet.create({
   headerStyle: {
     paddingHorizontal: 20,
   },
+  pageheader: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomColor : '#e0e0e0',
+    borderBottomWidth: 2,
+    paddingBottom: 10,
+  },
+  backButton: {
+    marginHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headertitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
   scrollContainer: {
     paddingBottom: 20,
     marginHorizontal: 20,
   },
   header: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   title: {
     fontSize: 24,
@@ -371,9 +492,6 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 16,
     marginLeft: 10,
-  },
-  TimelineContainer: {
-
   },
   timeline: {
     flexDirection: 'column',
@@ -536,3 +654,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+

@@ -4,11 +4,11 @@ import { ColorsType } from '@/constants/Colors';
 
 interface NavigationBarProps {
   currentColors: ColorsType['light'] | ColorsType['dark'];
-  selectedTab: string;
-  setSelectedTab: (tab: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (tab: string) => void;
 }
 
-const NavigationBar: React.FC<NavigationBarProps> = ({ currentColors, selectedTab, setSelectedTab }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ currentColors, selectedCategory, setSelectedCategory }) => {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -31,13 +31,13 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentColors, selectedTa
             key={tab}
             style={[
               styles.tab,
-              selectedTab === tab && { backgroundColor: currentColors.text },
+              selectedCategory === tab && { backgroundColor: currentColors.text },
             ]}
-            onPress={() => setSelectedTab(tab)}>
+            onPress={() => setSelectedCategory(tab)}>
             <Text
               style={[
                 styles.tabText,
-                selectedTab === tab
+                selectedCategory === tab
                   ? { color: currentColors.background }
                   : { color: currentColors.text },
               ]}

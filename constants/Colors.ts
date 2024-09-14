@@ -53,7 +53,7 @@ export const Colors: ColorsType = {
     menuicon: tintColorDark,
     base: '#CCD0CF',
     coverbase: '#151718',
-    text: '#9BABAB',
+    text: '#fff',
     background: '#06141B',
     tint: tintColorDark,
     icon: '#9BA1A6',
