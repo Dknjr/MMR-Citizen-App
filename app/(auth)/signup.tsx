@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function CreateAccount() {
   const router = useRouter();
@@ -13,7 +12,7 @@ export default function CreateAccount() {
 
   const handleSignUp = async () => {
     try {
-      const response = await fetch('http://192.168.2.241:20/api/auth/signup', {
+      const response = await fetch('http://192.168.1.72:2030/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

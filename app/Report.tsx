@@ -23,7 +23,6 @@ import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { useAuth } from '@/context/auth';
 
-
 export default function Report() {
   const router = useRouter();  
   const [isModalVisible, setModalVisible] = useState(false);
@@ -34,96 +33,13 @@ export default function Report() {
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Éclairage public');
+  const [selectedOption, setSelectedOption] = useState('');
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
   const { getToken, getUserId } = useAuth();
   const [loading, setLoading] = React.useState(false);
-
   
-  // Fonction pour soumettre des données à l'API
-  const submitData = async () => {
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append('description', description);
-      formData.append('categories', selectedCategory);
-      formData.append('localisation', JSON.stringify(location));
-
-      // Ajoutez les fichiers (images) à FormData
-      selectedImages.forEach((image, index) => {
-        formData.append('fichiersPreuves', {
-          uri: image.uri,
-          name: `preuve_${index}.jpg`, // Nom du fichier
-          type: 'image/jpeg/jpg', // Type du fichier
-        }as any);
-      });
-
-      // Vérifiez et affichez les valeurs de selectedCategory et location
-      console.log('Selected Category:', selectedCategory);
-      console.log('Location:', location);
-  
-      // Assurez-vous que selectedCategory et location sont définis
-      if (!selectedCategory) {
-        Alert.alert('Veuillez sélectionner une catégorie.');
-        setLoading(false); // Arrête le chargement en cas d'erreur
-        return;
-      }
-  
-      if (!location) {
-        Alert.alert('Veuillez fournir une localisation.');
-        setLoading(false); // Arrête le chargement en cas d'erreur
-        return;
-      }
-  
-      // Catégorie
-      formData.append('categories', selectedCategory);
-  
-      // Localisation
-      formData.append('localisation', JSON.stringify(location));
-  
-      // Récupération du token et de l'ID utilisateur
-      const token = await getToken();
-        // Récupérer le token du contexte d'authentification
-      const userId = await getUserId(); // Fonction pour obtenir l'ID utilisateur
-  
-      if (!token) {
-        Alert.alert('Token non disponible. Veuillez vous reconnecter.');
-        setLoading(false);
-        return;
-      }
-  
-      if (!userId) {
-        Alert.alert('ID utilisateur non disponible. Veuillez vous reconnecter.');
-        setLoading(false);
-        return;
-      }
-  
-      // Envoi de la requête avec les données multipart
-      const response = await axios.post(
-        `http://192.168.1.75:20/api/user/lance-signalement/${userId}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-  
-      if (response.status === 200) {
-        Alert.alert('Signalement soumis avec succès!');
-      } else {
-        Alert.alert('Erreur lors de la soumission du signalement');
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Erreur lors de la soumission du signalement');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (selectedImages.length > 0 && level >= 1) {
       setLevel(2);
@@ -262,6 +178,26 @@ export default function Report() {
     }
   };
   
+
+// Définition de categoryMapping
+const categoryMapping = {
+  'Voirie': 'VOIRIE',
+  'Éclairage public': 'ECLAIRAGE_PUBLIC',
+  'Environnement': 'ENVIRONNEMENT',
+  'Espaces verts': 'ESPACES_VERTS',
+  'Transports et stationnement': 'TRANSPORT_STATIONNEMENT',
+  'Logement et urbanisme': 'LOGEMENT_URBANISME',
+  'Services municipaux': 'SERVICES_MUNICIPAUX',
+  'Sécurité publique': 'SECURITE_PUBLIQUE',
+  'Services sociaux': 'SERVICES_SOCIAUX',
+} as const; // Ajoutez `as const` pour créer un type littéral des clés et des valeurs.
+
+// Typage de selectedCategory pour qu'il soit une des clés de categoryMapping
+type CategoryKey = keyof typeof categoryMapping;
+
+// Assurez-vous que `selectedCategory` est de type `CategoryKey`
+const categoryValue = categoryMapping[selectedCategory as CategoryKey];
+
   
   const renderContent = () => {
     switch (selectedCategory) {
@@ -271,13 +207,95 @@ export default function Report() {
       case 'Espaces verts': return <Parks setLevel={setLevel} />;
       case 'Transports et stationnement': return <Traffic setLevel={setLevel} />;
       case 'Logement et urbanisme': return <Urban setLevel={setLevel} />;
-      case 'Services municipaux': return <City setLevel={setLevel} />;
+      case 'Services municipaux': return <City setLevel={setLevel} setSelectedOption={function (option: '' | 'Problèmes liés aux services d\'eau et d\'assainissement' | 'Demandes de renseignements sur les horaires d\'ouverture des services municipaux' | 'Signalement de pannes dans les services municipaux en ligne'): void {
+        throw new Error('Function not implemented.');
+      } } />;
       case 'Sécurité publique': return <Public setLevel={setLevel} />;
       case 'Services sociaux': return <Social setLevel={setLevel} />;
       default: return <StreetLights setLevel={setLevel} />;
     }
   };
   
+    // Fonction pour soumettre des données à l'API
+    const submitData = async () => {
+      setLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append('description', description);
+    
+        // Envoi de la localisation comme chaîne sous la forme "(latitude,longitude)"
+        if (location) {
+          formData.append('lieu', `(${location.latitude},${location.longitude})`);
+        }
+    
+        // Vérifiez et affichez les valeurs de selectedCategory et location
+        console.log('Selected Category:', selectedCategory);
+        console.log('Location:', location);
+    
+        // Assurez-vous que selectedCategory et location sont définis
+        if (!selectedCategory || !location) {
+          Alert.alert('Veuillez sélectionner une catégorie et fournir une localisation.');
+          setLoading(false); // Arrête le chargement en cas d'erreur
+          return;
+        }
+        // Ajout de la catégorie (le backend attend un Enum)
+        const categoryValue = categoryMapping[selectedCategory as keyof typeof categoryMapping];
+        
+        if (!categoryValue) {
+          Alert.alert('Catégorie invalide. Veuillez sélectionner une catégorie valide.');
+          setLoading(false); // Arrête le chargement en cas d'erreur
+          return;
+        }
+        formData.append('categories', categoryValue);
+        // Ajout de l'option (à remplir en fonction de la logique)
+        formData.append('option', selectedOption || ''); // Utiliser selectedOptionType s'il est défini, sinon une chaîne vide
+    
+        // Vérifiez et ajoutez les fichiers (images) à FormData
+        if (selectedImages && selectedImages.length > 0) {
+          selectedImages.forEach((image, index) => {
+            formData.append('fichiersPreuves', {
+              uri: image.uri,
+              name: `preuve_${index}.jpg`, // Nom du fichier
+              type: 'image/jpeg', // Type du fichier
+            } as any);
+          });
+        }
+    
+        // Récupération du token et de l'ID utilisateur
+        const token = await getToken();
+        const userId = await getUserId();
+    
+        if (!token || !userId) {
+          Alert.alert('Token ou ID utilisateur non disponible. Veuillez vous reconnecter.');
+          setLoading(false);
+          return;
+        }
+    
+        // Envoi de la requête avec les données multipart
+        const response = await axios.post(
+          `http://192.168.1.72:2030/api/user/lance-signalement/${userId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+    
+        if (response.status === 201) { // Le code de statut de réussite est 201 (CREATED)
+          Alert.alert('Signalement soumis avec succès!');
+        } else {
+          Alert.alert('Erreur lors de la soumission du signalement');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la soumission du signalement:', error);
+        Alert.alert('Erreur lors de la soumission du signalement');
+      } finally {
+        setLoading(false);
+      }
+    };
+
   const handleReset = () => {
     setLocation(null);
     setDescription('');

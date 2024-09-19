@@ -2,35 +2,37 @@ import React, {useState} from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { RadioButton } from 'react-native-paper';
-import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 
-type ReportType = '' | "Problèmes liés aux services d'eau et d'assainissement" | "Demandes de renseignements sur les horaires d'ouverture des services municipaux" | 'Signalement de pannes dans les services municipaux en ligne';
+type OptionType = '' | "Problèmes liés aux services d'eau et d'assainissement" | "Demandes de renseignements sur les horaires d'ouverture des services municipaux" | 'Signalement de pannes dans les services municipaux en ligne';
 
-export default function City({ setLevel }: { setLevel: (level: number) => void }) {
-    const [selectedReport, setSelectedReport] = useState<ReportType>('');
+export default function City({ setLevel, setSelectedOption }: { setLevel: (level: number) => void, setSelectedOption: (option: OptionType) => void  }) {
 
+    const [selectedOption, setLocalSelectedOption] = useState<OptionType>('');
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
-    const handleReportSelection = (value: string) => {
-        setSelectedReport(value as ReportType);
+    const handleOptionSelection = (value: string) => {
+        const option = value as OptionType;
+        setLocalSelectedOption(option);
+        setSelectedOption(option); // Update the parent state
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
     return (
         <View>
             <RadioButton.Group
-                onValueChange={handleReportSelection}
-                value={selectedReport}>
+                onValueChange={handleOptionSelection}
+                value={selectedOption}>
                     
                 <View style={[styles.radioButtonContainer, { backgroundColor: currentColors.base }]}>
                     <Text
                         style={[styles.radioButtonText, { color: currentColors.text }]}>
                         Problèmes liés aux services{'\n'}d'eau et d'assainissement
                     </Text>
-                    <RadioButton.Android
+                    <RadioButton
                         value="Problèmes liés aux services d'eau et d'assainissement"
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}
@@ -41,7 +43,7 @@ export default function City({ setLevel }: { setLevel: (level: number) => void }
                         style={[styles.radioButtonText, { color: currentColors.text }]}>
                         Demandes de renseignements{'\n'}surles horaires d'ouverture{'\n'}des services municipaux
                     </Text>
-                    <RadioButton.Android
+                    <RadioButton
                         value="Demandes de renseignements sur les horaires d'ouverture des services municipaux"
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}
@@ -52,7 +54,7 @@ export default function City({ setLevel }: { setLevel: (level: number) => void }
                         style={[styles.radioButtonText, { color: currentColors.text }]}>
                         Signalement de pannes{'\n'}dans lesservices{'\n'}municipaux en ligne
                     </Text>
-                    <RadioButton.Android
+                    <RadioButton
                         value="Signalement de pannes dans les services municipaux en ligne"
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}

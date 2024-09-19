@@ -5,25 +5,25 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | 'Lampadaires défectueux' | 'Zones mal éclairées nécessitant de nouveaux lampadaires' | "Problèmes d'intensité lumineuse excessive ou insuffisante";
+type OptionType = '' | 'Lampadaires défectueux' | 'Zones mal éclairées nécessitant de nouveaux lampadaires' | "Problèmes d'intensité lumineuse excessive ou insuffisante";
 
 export default function StreetLights ({ setLevel }: { setLevel: (level: number) => void }) {
-    const [selectedReport, setSelectedReport] = useState<ReportType>('');
+    const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
-    const handleReportSelection = (value: string) => {
-        setSelectedReport(value as ReportType);
+    const handleOptionSelection = (value: string) => {
+        setSelectedOption(value as OptionType);
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
     return (
         <View>
             <RadioButton.Group
-                onValueChange={handleReportSelection}
-                value={selectedReport}>
+                onValueChange={handleOptionSelection}
+                value={selectedOption}>
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text

@@ -5,26 +5,26 @@ import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type ReportType = '' | "Demandes d'assistance sociale ou de logement d'urgence" | 'Signalement de situations de détresse ou de maltraitance' | "Demandes d'informations sur les services sociaux disponibles";
+type OptionType = '' | "Demandes d'assistance sociale ou de logement d'urgence" | 'Signalement de situations de détresse ou de maltraitance' | "Demandes d'informations sur les services sociaux disponibles";
 
 export default function Social ({ setLevel }: { setLevel: (level: number) => void }) {
-    const [selectedReport, setSelectedReport] = useState<ReportType>('');
+    const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
-    const handleReportSelection = (value: string) => {
-        setSelectedReport(value as ReportType);
-        useState<ReportType>('');
+    const handleOptionSelection = (value: string) => {
+        setSelectedOption(value as OptionType);
+        useState<OptionType>('');
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
     return (
         <View>
             <RadioButton.Group
-                onValueChange={handleReportSelection}
-                value={selectedReport}>
+                onValueChange={handleOptionSelection}
+                value={selectedOption}>
 
                 <View style={[styles.radioButtonContainer, {backgroundColor : currentColors.base}]}>
                         <Text

@@ -115,60 +115,61 @@ export default function SubmitRequest() {
   };
 
   const handleSubmit = async () => {
-    // Vérifiez que tous les champs nécessaires sont remplis
-    if (!firstName || !lastName || !email || !subject || !message) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires.');
-      return;
-    }
+  // Vérifiez que tous les champs nécessaires sont remplis
+  if (!firstName || !lastName || !email || !subject || !message) {
+    Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires.');
+    return;
+  }
 
-    // Créez un objet FormData pour rassembler les données de la demande
-    const formData = new FormData();
-    const token = await getToken();
-    const userId = await getUserId();
+  // Créez un objet FormData pour rassembler les données de la demande
+  const formData = new FormData();
+  const token = await getToken();
+  const userId = await getUserId();
 
+  // Ajoutez les informations de texte
+  formData.append('nom', lastName);
+  formData.append('prenom', firstName);
+  formData.append('email', email);
+  formData.append('sujet', subject);
+  formData.append('message', message);
 
-    // Ajoutez les informations de texte
-    formData.append('nom', lastName);
-    formData.append('prenom', firstName);
-    formData.append('email', email);
-    formData.append('sujet', subject);
-    formData.append('message', message);
-    
-    // Ajoutez les fichiers (images) à FormData
-    selectedImages.forEach((image, index) => {
-      formData.append('fichiersPreuves', {
-        uri: image.uri,
-        name: `preuve_${index}.jpg`, // Nom du fichier
-        type: 'image/jpeg/jpg', // Type du fichier
-      }as any);
+  // Ajoutez les fichiers (images) à FormData
+  selectedImages.forEach((image, index) => {
+    formData.append('fichiersPreuves', {
+      uri: image.uri,
+      name: `preuve_${index}.jpg`, // Nom du fichier
+      type: 'image/jpeg', // Type du fichier (vérifiez le type correct, 'image/jpeg' ou 'image/png')
+    } as any);
+  });
+
+  try {
+    // Effectuez une requête POST à l'API
+    const response = await fetch(`http://192.168.1.72:2030/api/user/faire-demande/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`, // Ajouter le jeton d'authentification
+      },
+      body: formData,
     });
 
-    try {
-      // Effectuez une requête POST à l'API
-      const response = await fetch(`http://192.168.1.75:20/api/user/faire-demande/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      // Vérifiez la réponse de l'API
-      if (response.ok) {
-        const responseData = await response.json();
-        setModalVisible(true);
-        handleReset(); // Réinitialiser les champs après un envoi réussi
-      } else {
-        // Gérer les erreurs de l'API
-        const errorData = await response.json();
-        Alert.alert('Erreur', errorData.message || 'Une erreur est survenue lors de la soumission de la demande.');
-      }
-    } catch (error) {
-      // Gérer les erreurs de la requête
-      console.error('Erreur de la requête:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la soumission de la demande.');
+    // Vérifiez la réponse de l'API
+    if (response.ok) {
+      // Si le backend renvoie une simple chaîne de caractères, utilisez `response.text()` au lieu de `response.json()`
+      const responseData = await response.text();
+      setModalVisible(true);
+      handleReset(); // Réinitialiser les champs après un envoi réussi
+    } else {
+      // Gérer les erreurs de l'API
+      const errorData = await response.text(); // Utilisez `response.text()` ici aussi
+      Alert.alert('Erreur', errorData || 'Une erreur est survenue lors de la soumission de la demande.');
     }
-  };
+  } catch (error) {
+    // Gérer les erreurs de la requête
+    console.error('Erreur de la requête:', error);
+    Alert.alert('Erreur', 'Une erreur est survenue lors de la soumission de la demande.');
+  }
+};
+
 
   const handleCloseModal = () => {
     setModalVisible(false);
