@@ -1,8 +1,8 @@
 //import { I18nextProvider } from 'react-i18next';
 //import { useTranslation } from 'react-i18next';
 //const [language, setLanguage] = useState(i18n.language)
-import React, { useState, useRef, useEffect } from 'react';
-import { Image, View, Text, Modal, TouchableOpacity, TextInput, Alert, StyleSheet, TouchableWithoutFeedback, PanResponder, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { Image, View, Text, Modal, TouchableOpacity, TextInput, Alert, StyleSheet} from 'react-native';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -13,8 +13,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useAuth } from '@/context/auth';
 
 export default function UserProfile() {
-  const [modalVisible, setModalVisible] = useState(false);
-  const panY = useRef(new Animated.Value(0)).current;
   const [isPasswordModalVisible, setPasswordModalVisible] = useState(false);
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -24,10 +22,9 @@ export default function UserProfile() {
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [coverImage, setCoverImage] = useState<string | null>(null);
-
   // Utilisation du contexte pour obtenir les informations de l'utilisateur connecté
   const { logout, user } = useAuth();
-  const [userData, setUserData] = useState<{ username: string; email: string } | null>(null);
+
 
   {/*useEffect(() => {
     if (user) {
@@ -74,35 +71,6 @@ export default function UserProfile() {
     );
   };  
 
-  const resetPosition = Animated.spring(panY, {
-    toValue: 0,
-    useNativeDriver: true,
-  });
-
-  const closeModal = () => {
-    Animated.timing(panY, {
-      toValue: 300, // Assurez-vous que cela est suffisant pour cacher le modal
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => setModalVisible(false));
-  };
-
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: (_, gestureState) => {
-      if (gestureState.dy > 0) {
-        panY.setValue(gestureState.dy);
-      }
-    },
-    onPanResponderRelease: (_, gestureState) => {
-      if (gestureState.dy > 150) { // Seuil pour fermer le modal
-        closeModal();
-      } else {
-        resetPosition.start();
-      }
-    },
-  });
- 
   /*const changeLanguage = (lng: string) => {
     if (i18n.changeLanguage) {
       i18n.changeLanguage(lng)
@@ -174,7 +142,9 @@ export default function UserProfile() {
           {coverImage ? (
             <Image source={{ uri: coverImage }} style={styles.coverImage} />
           ) : (
-            <Icons name="camera" size={24} color="#fff" />
+            <View style={styles.coverImagePlaceholder}>
+              <Image source={require('@/assets/images/Cover.jpg')} style={styles.image} />
+            </View>
           )}
         </View>
 
@@ -195,13 +165,13 @@ export default function UserProfile() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.backicons}>
+          <View style={styles.topicons}>
             <TouchableOpacity /*onPress={() => changeLanguage(language === 'en' ? 'fr' : 'en')}*/>
               <View>
                 <Icons name="language" size={24} color="#fff" />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.coverImagePlaceholder} onPress={() => pickImage(setCoverImage)}>
+            <TouchableOpacity onPress={() => pickImage(setCoverImage)}>
               <View>
                 <Icons name="camera" size={24} color="#fff" />
               </View>
@@ -209,11 +179,9 @@ export default function UserProfile() {
           </View>
 
           {/* Affichage du nom d'utilisateur et de l'email */}
-        <Text style={styles.profileName}>{userData?.username || 'Nom d’utilisateur'}</Text>
-        <Text style={styles.profileDescription}>{userData?.email || 'Email utilisateur'}</Text>
-          <Text style={styles.profileDescription}>
-            Lorem ipsum dolor sit amet consectetur. Ultrices facilisis
-          </Text>
+          <Text style={styles.profileName}>{user?.username || 'Nom d’utilisateur'}</Text>
+          <Text style={styles.email}>{user?.email || 'Email utilisateur'}</Text>
+          
         </View>
 
         <View style={styles.menu}>
@@ -322,10 +290,18 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   coverImagePlaceholder: {
-    
-  },
-  backicons: {
     width: '100%',
+    height: 320,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 320,
+    resizeMode: 'cover',
+  },
+  topicons: {
+    width: '200%',
     flexDirection: 'row',
     paddingHorizontal: 20,
     position: 'absolute',
@@ -387,9 +363,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: Colors.light.background,
   },
-  profileDescription: {
+  email: {
     marginTop: 5,
-    width: '80%',
+    width: '100%',
     textAlign: 'center',
     color: Colors.light.background,
   },

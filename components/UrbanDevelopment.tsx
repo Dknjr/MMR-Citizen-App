@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { RadioButton } from 'react-native-paper';
@@ -7,15 +7,22 @@ import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-nativ
 
 type OptionType = '' | 'Inspections de sécurité des bâtiments' | 'Violations des règlements de construction' | 'Demandes de permis de construction ou de rénovation';
 
-export default function Urban ({ setLevel }: { setLevel: (level: number) => void }) {
-    const [selectedOption, setSelectedOption] = useState<OptionType>('');
+interface UrbanProps{
+    setLevel: (level: number) => void;
+    setOption: (option: OptionType) => void;
+}
+
+const Urban:FC<UrbanProps>=({ setLevel, setOption }) => {
+const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
     const isDarkMode = colorScheme === 'dark';
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
     const handleOptionSelection = (value: string) => {
+        console.log("Option sélectionnée : ", value);
         setSelectedOption(value as OptionType);
+        setOption(value as OptionType);
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
@@ -54,6 +61,7 @@ export default function Urban ({ setLevel }: { setLevel: (level: number) => void
         </View>
     )    
 }
+export default Urban;
 
 const styles = StyleSheet.create({
     sectionTitle: {

@@ -12,7 +12,7 @@ export default function CreateAccount() {
 
   const handleSignUp = async () => {
     try {
-      const response = await fetch('http://192.168.1.72:2030/api/auth/signup', {
+      const response = await fetch('http://192.168.1.75:2030/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

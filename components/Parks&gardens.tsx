@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { RadioButton } from 'react-native-paper';
@@ -7,7 +7,11 @@ import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-nativ
 
 type OptionType = '' | "Taille d'arbres ou de haies" | 'Arrosage des parcs et des jardins publics' | 'Entretien des espaces verts';
 
-export default function Parks ({ setLevel }: { setLevel: (level: number) => void }) {
+interface ParksProp{
+    setLevel: (level: number) => void;
+    setOption : (option: OptionType) => void;
+} 
+const Parks:FC<ParksProp> = ({ setLevel, setOption }) => {
     const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
@@ -15,7 +19,9 @@ export default function Parks ({ setLevel }: { setLevel: (level: number) => void
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
     const handleOptionSelection = (value: string) => {
+        console.log("Option sélectionnée : ", value);
         setSelectedOption(value as OptionType);
+        setOption(value as OptionType);
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
@@ -53,6 +59,8 @@ export default function Parks ({ setLevel }: { setLevel: (level: number) => void
         </View>
     )    
 }
+
+export default Parks;
 
 const styles = StyleSheet.create({
     sectionTitle: {

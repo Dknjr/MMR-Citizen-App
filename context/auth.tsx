@@ -9,6 +9,7 @@ interface AuthContextType {
     logout: () => void;
     getToken: () => Promise<string | null>;
     getUserId: () => Promise<string | null>;
+    getUserDetails: () => Promise<{ username: string | null; email: string | null }>
 }
 
 interface User {
@@ -73,22 +74,40 @@ export function Provider({ children }: { children: React.ReactNode }) : JSX.Elem
         console.error(error);
         return null;
     }
-}
-async function getUserId(): Promise<string | null> {
-  try {
-    const storedUser = await AsyncStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      console.log('User data:', user);  // Ajoutez un log pour déboguer
-      console.log('User stored in AsyncStorage:', user); // Log les données de l'utilisateur stockées
-      return user.id ? user.id.toString() : null; // Vérifiez que l'ID est bien présent et renvoyez-le
-    }
-    return null;
-  } catch (error) {
-    console.error('Erreur lors de la récupération de l\'ID utilisateur:', error);
-    return null;
   }
-}
+  async function getUserId(): Promise<string | null> {
+    try {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        console.log('User data:', user);  // Ajoutez un log pour déboguer
+        console.log('User stored in AsyncStorage:', user); // Log les données de l'utilisateur stockées
+        return user.id ? user.id.toString() : null; // Vérifiez que l'ID est bien présent et renvoyez-le
+      }
+      return null;
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'ID utilisateur:', error);
+      return null;
+    }
+  }
+
+  async function getUserDetails(): Promise<{ username: string | null; email: string | null }> {
+    try {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        return {
+          username: user.username || null,
+          email: user.email || null,
+        };
+      }
+      return { username: null, email: null };
+    } catch (error) {
+      console.error('Erreur lors de la récupération des détails de l\'utilisateur:', error);
+      return { username: null, email: null };
+    }
+  }
+  
 
 
   //
@@ -107,10 +126,11 @@ async function getUserId(): Promise<string | null> {
     login,
     logout,
     getToken,
-    getUserId
+    getUserId,
+    getUserDetails,
   };
   return (
-      <AuthContexte.Provider value={{ user, login, logout, getToken, getUserId }} >
+      <AuthContexte.Provider value={{ user, login, logout, getToken, getUserId, getUserDetails }} >
         {children}
       </AuthContexte.Provider>
   );

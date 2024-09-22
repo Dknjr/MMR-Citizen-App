@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { RadioButton } from 'react-native-paper';
@@ -7,7 +7,12 @@ import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-nativ
 
 type OptionType = '' | 'Lampadaires défectueux' | 'Zones mal éclairées nécessitant de nouveaux lampadaires' | "Problèmes d'intensité lumineuse excessive ou insuffisante";
 
-export default function StreetLights ({ setLevel }: { setLevel: (level: number) => void }) {
+interface StreetLightsProps {
+    setLevel: (level: number) => void;
+    setOption : (option: OptionType) => void;
+}
+
+const StreetLights:FC<StreetLightsProps> = ({ setLevel, setOption }) => {
     const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
@@ -16,7 +21,9 @@ export default function StreetLights ({ setLevel }: { setLevel: (level: number) 
 
     const handleOptionSelection = (value: string) => {
         setSelectedOption(value as OptionType);
-        setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
+        setOption(value as OptionType);
+        setLevel(1);
+
     };
 
     return (
@@ -54,6 +61,7 @@ export default function StreetLights ({ setLevel }: { setLevel: (level: number) 
         </View>
     )    
 }
+export default StreetLights
 
 const styles = StyleSheet.create({
     sectionTitle: {

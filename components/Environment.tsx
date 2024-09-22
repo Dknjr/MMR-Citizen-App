@@ -1,13 +1,18 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { RadioButton } from 'react-native-paper';
-import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 
 type OptionType = '' | 'Déchets abandonnés ou encombrants' | "Nettoyage de parcs ou d'espaces publics" | 'Problèmes de déversement ou de pollution';
 
-export default function Environment ({ setLevel }: { setLevel: (level: number) => void }) {
+interface EnvironementProps {
+    setLevel: (level: number) => void;
+    setOption : (option: OptionType) => void;
+}
+
+const Environment:FC<EnvironementProps> = ({ setLevel, setOption }) => {
     const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
@@ -16,6 +21,8 @@ export default function Environment ({ setLevel }: { setLevel: (level: number) =
 
     const handleOptionSelection = (value: string) => {
         setSelectedOption(value as OptionType);
+        console.log("Option sélectionnée : ", value);
+        setOption(value as OptionType);
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
@@ -53,6 +60,8 @@ export default function Environment ({ setLevel }: { setLevel: (level: number) =
         </View>
     )    
 }
+
+export default Environment;
 
 const styles = StyleSheet.create({
     sectionTitle: {

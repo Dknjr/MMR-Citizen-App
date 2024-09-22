@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { RadioButton } from 'react-native-paper';
@@ -7,7 +7,12 @@ import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-nativ
 
 type OptionType = '' | 'Signalement de graffitis ou de vandalismes' | 'Problèmes de sécurité dans les espaces publics' | 'Demandes de présence policière accrue dans certaines zones';
 
-export default function Public ({ setLevel }: { setLevel: (level: number) => void }) {
+interface PublicProps {
+    setLevel: (level: number) => void;
+    setOption: (option: string) => void;
+}
+
+const Public:FC<PublicProps> = ({ setLevel, setOption }) => {
     const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
@@ -15,7 +20,9 @@ export default function Public ({ setLevel }: { setLevel: (level: number) => voi
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
     const handleOptionSelection = (value: string) => {
+        console.log("Option sélectionnée : ", value);
         setSelectedOption(value as OptionType);
+        setOption(value as OptionType);
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };
 
@@ -54,6 +61,7 @@ export default function Public ({ setLevel }: { setLevel: (level: number) => voi
         </View>
     )    
 }
+export default Public
 
 const styles = StyleSheet.create({
     sectionTitle: {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Stack } from 'expo-router';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, ActivityIndicator, ImageComponent } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -27,18 +27,20 @@ export default function Report() {
   const router = useRouter();  
   const [isModalVisible, setModalVisible] = useState(false);
   const [level, setLevel] = useState(0);
+  const [ option , setOption ] = useState ('')
   const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>(null);
   const [description, setDescription] = useState<string>('');
   const [images, setImages] = useState<{ uri: string }[]>([]);
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Éclairage public');
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, ] = useState<OptionType>('');
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
   const { getToken, getUserId } = useAuth();
   const [loading, setLoading] = React.useState(false);
+  const streetLightsRef = useRef<any>(null);
   
   useEffect(() => {
     if (selectedImages.length > 0 && level >= 1) {
@@ -178,6 +180,14 @@ export default function Report() {
     }
   };
   
+// Types des options pour chaque composant
+type CityOptionType = '' | "Problèmes liés aux services d'eau et d'assainissement" | "Demandes de renseignements sur les horaires d'ouverture des services municipaux" | 'Signalement de pannes dans les services municipaux en ligne';
+
+type EnvironmentOptionType = '' | 'Déchets abandonnés ou encombrants' | "Nettoyage de parcs ou d'espaces publics" | 'Problèmes de déversement ou de pollution';
+
+// Type pour l'union de tous les types d'options
+type OptionType = CityOptionType | EnvironmentOptionType;
+
 
 // Définition de categoryMapping
 const categoryMapping = {
@@ -191,66 +201,58 @@ const categoryMapping = {
   'Sécurité publique': 'SECURITE_PUBLIQUE',
   'Services sociaux': 'SERVICES_SOCIAUX',
 } as const; // Ajoutez `as const` pour créer un type littéral des clés et des valeurs.
-
-// Typage de selectedCategory pour qu'il soit une des clés de categoryMapping
-type CategoryKey = keyof typeof categoryMapping;
-
-// Assurez-vous que `selectedCategory` est de type `CategoryKey`
-const categoryValue = categoryMapping[selectedCategory as CategoryKey];
-
   
   const renderContent = () => {
     switch (selectedCategory) {
-      case 'Éclairage public': return <StreetLights setLevel={setLevel} />;
-      case 'Voirie': return <PublicRoad setLevel={setLevel} />;
-      case 'Environnement': return <Environment setLevel={setLevel} />;
-      case 'Espaces verts': return <Parks setLevel={setLevel} />;
-      case 'Transports et stationnement': return <Traffic setLevel={setLevel} />;
-      case 'Logement et urbanisme': return <Urban setLevel={setLevel} />;
-      case 'Services municipaux': return <City setLevel={setLevel} setSelectedOption={function (option: '' | 'Problèmes liés aux services d\'eau et d\'assainissement' | 'Demandes de renseignements sur les horaires d\'ouverture des services municipaux' | 'Signalement de pannes dans les services municipaux en ligne'): void {
-        throw new Error('Function not implemented.');
-      } } />;
-      case 'Sécurité publique': return <Public setLevel={setLevel} />;
-      case 'Services sociaux': return <Social setLevel={setLevel} />;
-      default: return <StreetLights setLevel={setLevel} />;
+      case 'Éclairage public': return <StreetLights setLevel={setLevel} setOption={setOption}/>;
+      case 'Voirie': return <PublicRoad setLevel={setLevel} setOption={setOption}/>;
+      case 'Environnement': return <Environment setLevel={setLevel} setOption={setOption}/>;
+      case 'Espaces verts': return <Parks setLevel={setLevel} setOption={setOption}/>;
+      case 'Transports et stationnement': return <Traffic setLevel={setLevel} setOption={setOption}/>;
+      case 'Logement et urbanisme': return <Urban setLevel={setLevel} setOption={setOption}/>;
+      case 'Services municipaux': return <City setLevel={setLevel} setOption={setOption}/>;
+      case 'Sécurité publique': return <Public setLevel={setLevel} setOption={setOption}/>;
+      case 'Services sociaux': return <Social setLevel={setLevel} setOption={setOption}/>;
+      default: return <StreetLights setLevel={setLevel} setOption = {setOption} />;
     }
   };
+
+
   
-    // Fonction pour soumettre des données à l'API
-    const submitData = async () => {
-      setLoading(true);
-      try {
-        const formData = new FormData();
-        formData.append('description', description);
-    
-        // Envoi de la localisation comme chaîne sous la forme "(latitude,longitude)"
-        if (location) {
-          formData.append('lieu', `(${location.latitude},${location.longitude})`);
-        }
-    
-        // Vérifiez et affichez les valeurs de selectedCategory et location
-        console.log('Selected Category:', selectedCategory);
-        console.log('Location:', location);
-    
-        // Assurez-vous que selectedCategory et location sont définis
-        if (!selectedCategory || !location) {
-          Alert.alert('Veuillez sélectionner une catégorie et fournir une localisation.');
-          setLoading(false); // Arrête le chargement en cas d'erreur
-          return;
-        }
-        // Ajout de la catégorie (le backend attend un Enum)
+  
+  // Fonction pour soumettre des données à l'API
+  const submitData = async () => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      
+      
+      // Ajout de la catégorie (le backend attend un Enum)
         const categoryValue = categoryMapping[selectedCategory as keyof typeof categoryMapping];
-        
         if (!categoryValue) {
           Alert.alert('Catégorie invalide. Veuillez sélectionner une catégorie valide.');
           setLoading(false); // Arrête le chargement en cas d'erreur
           return;
         }
         formData.append('categories', categoryValue);
+        
+        // Assurez-vous que selectedCategory et location sont définis
+        if (!selectedCategory || !location) {
+          Alert.alert('Veuillez sélectionner une catégorie et fournir une localisation.');
+          setLoading(false); // Arrête le chargement en cas d'erreur
+          return;
+        }
+        
         // Ajout de l'option (à remplir en fonction de la logique)
-        formData.append('option', selectedOption || ''); // Utiliser selectedOptionType s'il est défini, sinon une chaîne vide
-    
-        // Vérifiez et ajoutez les fichiers (images) à FormData
+        if (!option) {
+          Alert.alert('Veuillez sélectionner une option');
+          setLoading(false); // Arrête le chargement en cas d'erreur
+          return;
+        }
+        const selectedOption = streetLightsRef.current?.getSelectedOption();
+        formData.append('optionSignalement', option);
+        
+      // Vérifiez et ajoutez les fichiers (images) à FormData
         if (selectedImages && selectedImages.length > 0) {
           selectedImages.forEach((image, index) => {
             formData.append('fichiersPreuves', {
@@ -260,8 +262,26 @@ const categoryValue = categoryMapping[selectedCategory as CategoryKey];
             } as any);
           });
         }
+        
+        // Envoi de la localisation comme chaîne sous la forme "(latitude,longitude)"
+        if (location) {
+          formData.append('lieu', `(${location.latitude}, ${location.longitude})`);
+        }
+
+      // Ajout de la Description
+        formData.append('description', description);
+        
+        
+      // Les Logs-------------------------------------
+        console.log('Selected Category:', categoryValue);
+        console.log("Option sélectionnée : ", option);
+        console.log('Selected Images:', selectedImages);
+        console.log('Location:', location);
+        console.log('Description:', description);
+
     
-        // Récupération du token et de l'ID utilisateur
+
+      // Récupération du token et de l'ID utilisateur
         const token = await getToken();
         const userId = await getUserId();
     
@@ -270,10 +290,9 @@ const categoryValue = categoryMapping[selectedCategory as CategoryKey];
           setLoading(false);
           return;
         }
-    
-        // Envoi de la requête avec les données multipart
+      // Envoi de la requête avec les données multipart
         const response = await axios.post(
-          `http://192.168.1.72:2030/api/user/lance-signalement/${userId}`,
+          `http://192.168.1.75:2030/api/user/lance-signalement/${userId}`,
           formData,
           {
             headers: {
@@ -284,7 +303,7 @@ const categoryValue = categoryMapping[selectedCategory as CategoryKey];
         );
     
         if (response.status === 201) { // Le code de statut de réussite est 201 (CREATED)
-          Alert.alert('Signalement soumis avec succès!');
+          setModalVisible(true)
         } else {
           Alert.alert('Erreur lors de la soumission du signalement');
         }
@@ -309,9 +328,9 @@ const categoryValue = categoryMapping[selectedCategory as CategoryKey];
     setModalVisible(false);
   };
 
-  const handleBackPress = () => {
+  /*const handleBackPress = () => {
     router.push('/(tabs)/add');
-  };
+  };*/
 
   return (
     <SafeAreaProvider>

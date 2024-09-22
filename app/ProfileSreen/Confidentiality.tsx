@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Colors } from '@/constants/Colors';
 
 // Définir les types pour les données et la navigation

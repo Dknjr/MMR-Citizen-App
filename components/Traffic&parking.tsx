@@ -1,13 +1,18 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { RadioButton } from 'react-native-paper';
 import { View, Text, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 
-type OptionType = '' | 'Problèmes de stationnement illégal' | "Demandes d'installation de nouveaux parcs de stationnement" | "Demandes d'installation de nouveaux parcs de stationnement";
+type OptionType = '' | 'Problèmes de stationnement illégal' | "Demandes d'installation de nouveaux parcs de stationnement" | "Réparation ou entretien des transports en commun";
 
-export default function Traffic ({ setLevel }: { setLevel: (level: number) => void }) {
+interface TrafficProps{
+    setLevel: (level: number) => void;
+    setOption: (option: OptionType) => void;
+}
+
+const Traffic:FC<TrafficProps> = ({ setLevel, setOption }) => {
     const [selectedOption, setSelectedOption] = useState<OptionType>('');
     
     const colorScheme = useColorScheme();
@@ -15,9 +20,11 @@ export default function Traffic ({ setLevel }: { setLevel: (level: number) => vo
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
     const handleOptionSelection = (value: string) => {
+        console.log("Option sélectionnée : ", value);
         setSelectedOption(value as OptionType);
+        setOption(value as OptionType)
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
-    };
+    };  
 
     return (
         <View>
@@ -45,7 +52,7 @@ export default function Traffic ({ setLevel }: { setLevel: (level: number) => vo
                         <Text
                         style={[styles.radioButtonText, { color: currentColors.text }]}>Réparation ou entretien{'\n'}des transports en commun
                         </Text>
-                        <RadioButton.Android value="Demandes d'installation de nouveaux parcs de stationnement" 
+                        <RadioButton.Android value="Réparation ou entretien des transports en commun" 
                         color={currentColors.tint}
                         uncheckedColor={currentColors.text}/>
                 </View>
@@ -53,6 +60,8 @@ export default function Traffic ({ setLevel }: { setLevel: (level: number) => vo
         </View>
     )    
 }
+
+export default Traffic
 
 const styles = StyleSheet.create({
     sectionTitle: {
