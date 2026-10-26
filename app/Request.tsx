@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { View, Text, TextInput,  TouchableOpacity, StyleSheet, ScrollView, Alert, Image } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
+import { apiUrl } from '@/constants/Api';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Icons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
@@ -144,7 +145,7 @@ export default function SubmitRequest() {
 
   try {
     // Effectuez une requête POST à l'API
-    const response = await fetch(`http://192.168.1.72:2030/api/user/faire-demande/${userId}`, {
+    const response = await fetch(apiUrl(`/api/user/faire-demande/${userId}`), {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`, // Ajouter le jeton d'authentification

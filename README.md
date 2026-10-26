@@ -79,7 +79,7 @@ app/
 ├── (auth)/          # Connexion, inscription, chargement
 ├── (tabs)/          # Accueil, ajout, profil
 ├── notifications/   # Liste et détail des notifications
-├── ProfileSreen/    # Profil, confidentialité, historique, aide
+├── ProfileScreen/    # Profil, confidentialité, historique, aide
 ├── Report.tsx       # Formulaire de signalement
 └── Request.tsx      # Formulaire de demande
 components/          # Catégories, actualités, modales, UI
@@ -96,7 +96,17 @@ npx expo start
 
 Puis ouvrez l'application dans **Expo Go**, un émulateur Android ou un simulateur iOS.
 
-> ⚠️ L'application appelle l'API Spring Boot à une adresse locale (`http://<IP>:2030/api/...`). Remplacez cette adresse par celle de votre serveur dans `app/(auth)/login.tsx`, `app/(auth)/signup.tsx`, `app/Report.tsx` et `app/Request.tsx`.
+L'adresse de l'API Spring Boot se règle dans un fichier `.env` (modèle : `.env.example`) :
+
+```bash
+cp .env.example .env
+# puis indiquez l'adresse de votre serveur :
+# EXPO_PUBLIC_API_URL=http://192.168.1.10:2030
+```
+
+Sur un téléphone physique, utilisez l'IP locale de votre ordinateur plutôt que `localhost`.
+
+Tests unitaires : `npx jest`.
 
 ## Auteur
 

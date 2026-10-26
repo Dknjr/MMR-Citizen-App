@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { apiUrl } from '@/constants/Api';
 
 export default function CreateAccount() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function CreateAccount() {
 
   const handleSignUp = async () => {
     try {
-      const response = await fetch('http://192.168.1.75:2030/api/auth/signup', {
+      const response = await fetch(apiUrl('/api/auth/signup'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

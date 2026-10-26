@@ -3,6 +3,7 @@ import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert } fro
 import { useAuth } from '@/context/auth'; // Assurez-vous que le chemin est correct
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { apiUrl } from '@/constants/Api';
 //import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 //import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
@@ -14,7 +15,7 @@ export default function LoginScreen() {
 
   const handleAuthLogin = async () => {
     try {
-      const response = await fetch('http://192.168.1.75:2030/api/auth/login', {
+      const response = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
