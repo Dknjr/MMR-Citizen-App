@@ -80,8 +80,6 @@ export function Provider({ children }: { children: React.ReactNode }) : JSX.Elem
       const storedUser = await AsyncStorage.getItem('user');
       if (storedUser) {
         const user = JSON.parse(storedUser);
-        console.log('User data:', user);  // Ajoutez un log pour déboguer
-        console.log('User stored in AsyncStorage:', user); // Log les données de l'utilisateur stockées
         return user.id ? user.id.toString() : null; // Vérifiez que l'ID est bien présent et renvoyez-le
       }
       return null;

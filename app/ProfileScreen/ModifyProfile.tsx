@@ -19,7 +19,7 @@ export default function ModifyProfile() {
   const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
   const handleSavePress = () => {
-    router.push('/ProfileSreen/ModifyProfile'); // Dirige vers l'interface de modification de profil
+    router.push('/ProfileScreen/ModifyProfile'); // Dirige vers l'interface de modification de profil
   };
 
   return (

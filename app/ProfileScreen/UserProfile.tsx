@@ -28,7 +28,7 @@ export default function UserProfile() {
   }, []);*/
 
   const handleModifyPress = () => {
-    router.push('/ProfileSreen/ModifyProfile'); // Dirige vers l'interface de modification de profil
+    router.push('/ProfileScreen/ModifyProfile'); // Dirige vers l'interface de modification de profil
   };
 
   return (
