@@ -98,7 +98,7 @@ export default function UserProfile() {
     if (password === 'yourpassword') {
       setPasswordModalVisible(false);
       setPassword('');
-      router.push('/ProfileSreen/Confidentiality');
+      router.push('/ProfileScreen/Confidentiality');
     } else {
       setErrorMessage('Mot de passe incorrect');
     }
@@ -119,19 +119,19 @@ export default function UserProfile() {
   };
 
   const handleProfilPress = () => {
-    router.push('/ProfileSreen/UserProfile');
+    router.push('/ProfileScreen/UserProfile');
   };
 
   const handleHistoriquePress = () => {
-    router.push('/ProfileSreen/Historique');
+    router.push('/ProfileScreen/Historique');
   };
 
   const handleNotificationsPress = () => {
-    router.push('/ProfileSreen/Notification');
+    router.push('/ProfileScreen/Notification');
   };
 
   const handleHelpPress = () => {
-    router.push('/ProfileSreen/Help');
+    router.push('/ProfileScreen/Help');
   };
 
 

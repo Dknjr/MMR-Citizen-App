@@ -21,7 +21,6 @@ const Environment:FC<EnvironementProps> = ({ setLevel, setOption }) => {
 
     const handleOptionSelection = (value: string) => {
         setSelectedOption(value as OptionType);
-        console.log("Option sélectionnée : ", value);
         setOption(value as OptionType);
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
     };

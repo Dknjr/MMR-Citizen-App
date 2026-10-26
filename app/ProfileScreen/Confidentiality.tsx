@@ -45,7 +45,7 @@ export default function ConfidentialiteScreen() {
   };
 
   const handleModifyPress = () => {
-    router.push('/ProfileSreen/ModifyConfidentiality')
+    router.push('/ProfileScreen/ModifyConfidentiality')
   };
 
   return (

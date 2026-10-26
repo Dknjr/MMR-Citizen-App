@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Alert, ActivityIndicator, ImageComponent } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
+import { apiUrl } from '@/constants/Api';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Icons from '@expo/vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
@@ -272,12 +273,6 @@ const categoryMapping = {
         formData.append('description', description);
         
         
-      // Les Logs-------------------------------------
-        console.log('Selected Category:', categoryValue);
-        console.log("Option sélectionnée : ", option);
-        console.log('Selected Images:', selectedImages);
-        console.log('Location:', location);
-        console.log('Description:', description);
 
     
 
@@ -292,7 +287,7 @@ const categoryMapping = {
         }
       // Envoi de la requête avec les données multipart
         const response = await axios.post(
-          `http://192.168.1.75:2030/api/user/lance-signalement/${userId}`,
+          apiUrl(`/api/user/lance-signalement/${userId}`),
           formData,
           {
             headers: {

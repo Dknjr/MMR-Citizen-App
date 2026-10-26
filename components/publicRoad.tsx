@@ -20,7 +20,6 @@ const PublicRoad:FC<PublicRoadProps> = ({ setLevel, setOption }) => {
     const currentColors = isDarkMode ? Colors.dark : Colors.light;
 
     const handleOptionSelection = (value: string) => {
-        console.log("Option sélectionnée : ", value);
         setSelectedOption(value as OptionType);
         setOption(value as OptionType)
         setLevel(1); // Active le niveau 1 de la TimeLine lorsque l'utilisateur fait un choix
