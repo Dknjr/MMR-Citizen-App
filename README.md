@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Dknjr/MMR-Citizen-App/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Dknjr/MMR-Citizen-App/actions/workflows/ci.yml/badge.svg"></a>
   <img alt="Expo" src="https://img.shields.io/badge/Expo-51-000020?logo=expo&logoColor=white">
   <img alt="React Native" src="https://img.shields.io/badge/React%20Native-0.74-61DAFB?logo=react&logoColor=black">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white">
@@ -106,7 +107,13 @@ cp .env.example .env
 
 Sur un téléphone physique, utilisez l'IP locale de votre ordinateur plutôt que `localhost`.
 
-Tests unitaires : `npx jest`.
+Vérifications (les mêmes que la CI, lancée sur chaque pull request) :
+
+```bash
+npx tsc --noEmit   # types
+npm run lint       # ESLint
+npx jest           # tests unitaires
+```
 
 ## Auteur
 
