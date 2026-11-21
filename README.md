@@ -14,7 +14,7 @@
   <img alt="Expo" src="https://img.shields.io/badge/Expo-51-000020?logo=expo&logoColor=white">
   <img alt="React Native" src="https://img.shields.io/badge/React%20Native-0.74-61DAFB?logo=react&logoColor=black">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white">
-  <img alt="Spring Boot" src="https://img.shields.io/badge/API-Spring%20Boot-6DB33F?logo=springboot&logoColor=white">
+  <a href="https://github.com/Dknjr/Citizen-API"><img alt="Spring Boot" src="https://img.shields.io/badge/API-Spring%20Boot-6DB33F?logo=springboot&logoColor=white"></a>
 </p>
 
 <p align="center">
@@ -37,7 +37,7 @@ Projet réalisé pendant mon stage au **Cabinet G&F (Lomé, 2024)** pour la **Ma
 
 - 📱 une **application mobile** (ce dépôt) pour les citoyens ;
 - 🖥️ un **back-office web** pour les agents municipaux ;
-- 🔐 une **API REST Spring Boot** sécurisée par JWT, avec une base MySQL.
+- 🔐 une **API REST Spring Boot** sécurisée par JWT, avec une base MySQL : **[Citizen-API](https://github.com/Dknjr/Citizen-API)**.
 
 > 📖 Étude de cas complète (problème, démarche, maquettes, architecture) : voir mon portfolio.
 
@@ -71,7 +71,7 @@ Projet réalisé pendant mon stage au **Cabinet G&F (Lomé, 2024)** pour la **Ma
 - **Notifications :** `expo-notifications`
 - **Traductions :** `i18next`, `react-i18next`
 - **Appels API :** `axios`, `fetch`, session stockée avec AsyncStorage
-- **Backend (dépôt séparé) :** Java, Spring Boot, Spring Security, JWT, BCrypt, MySQL
+- **Backend ([Citizen-API](https://github.com/Dknjr/Citizen-API)) :** Java, Spring Boot, Spring Security, JWT, BCrypt, MySQL
 
 ## Structure
 
